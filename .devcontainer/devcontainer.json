@@ -1,12 +1,6 @@
 {
   "name": "Theater Kid Angular Development",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-  
-  "hostRequirements": {
-    "cpus": 2,
-    "memory": "8gb",
-    "storage": "32gb"
-  },
 
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}

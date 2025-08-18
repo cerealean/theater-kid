@@ -6,7 +6,7 @@ This repository includes a GitHub Codespaces configuration for cloud-based Angul
 
 - **Node.js LTS (v20)**: Latest stable Node.js runtime
 - **Angular CLI**: Globally installed and ready to use
-- **Minimal Machine Size**: Configured with 2 CPU cores, 8GB RAM for cost efficiency
+- **Flexible Machine Size**: Choose the machine size that fits your needs and budget
 - **VS Code Extensions**: Pre-configured with essential Angular/TypeScript development extensions
 - **Port Forwarding**: Angular dev server (port 4200) automatically forwarded
 - **Auto-setup**: Dependencies automatically installed on container creation
