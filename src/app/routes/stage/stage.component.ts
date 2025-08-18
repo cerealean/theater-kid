@@ -25,7 +25,7 @@ import { ConfigService } from '../../core/services/config.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './stage.component.html',
 })
-export class StageComponent {
+export class StageComponent implements OnInit {
   private config = inject(ConfigService);
   private route = inject(ActivatedRoute);
 
