@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/cerealean/theater-kid/compare/v1.0.0...v1.1.0) (2025-08-18)
+
+
+### Bug Fixes
+
+* reduce CI workflow permissions to contents:read only ([b6ea7eb](https://github.com/cerealean/theater-kid/commit/b6ea7eb761a42bed1d920c58fb36281cad8e318d))
+
+
+### Features
+
+* separate CI/CD workflows for PR validation and release automation ([170c524](https://github.com/cerealean/theater-kid/commit/170c524ae154b8e5891eee412b3154f5ef408f66))
+* separate ci/cd workflows for pr validation/release automation ([df61ba3](https://github.com/cerealean/theater-kid/commit/df61ba3947520d7cb2feba404a4307a5be50e83f))
+
 # 1.0.0 (2025-08-18)
 
 
