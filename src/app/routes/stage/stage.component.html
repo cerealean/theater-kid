@@ -2,7 +2,7 @@
   <div class="container max-w-screen-md mx-auto p-4 space-y-3">
     @for(m of messages(); track m.content) {
     <div class="flex">
-      <div class="max-w-[80ch] w-fit px-4 py-3 rounded-bubble shadow-stage border border-white/10" [ngClass]="{
+      <div class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10" [ngClass]="{
                 'ml-auto': m.role === 'user',
                 'bg-white/5': m.role !== 'assistant',
                 'bg-primary/10': m.role === 'assistant'
