@@ -9,11 +9,12 @@ import { OpenAIProvider } from '../../core/llm/openai.provider';
 import { OpenRouterProvider } from '../../core/llm/openrouter.provider';
 import { startOpenRouterPKCE, finishOpenRouterPKCE } from '../../core/llm/openrouter.oauth';
 import { ConfigService } from '../../core/services/config.service';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
 
 @Component({
   standalone: true,
   selector: 'tk-stage',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SpotlightDirective],
   templateUrl: './stage.component.html',
 })
 export class StageComponent implements OnInit {

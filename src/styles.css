@@ -149,3 +149,201 @@ body {
   );
   transition: background-position 60ms linear;
 }
+
+/* =========================
+   THEATER PROSCENIUM PACK
+   Pure CSS, no images.
+   ========================= */
+
+/* Base stage background (safe gradients + vignette) */
+.tk-stage {
+  position: relative;
+  min-height: 100%;
+  background:
+    radial-gradient(50% 35% at 50% 0%, rgba(125, 43, 124, 0.18), transparent 60%),
+    radial-gradient(50% 35% at 50% 100%, rgba(63, 182, 255, 0.12), transparent 60%),
+    linear-gradient(#17141d, #0e0c12 70%);
+}
+.tk-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 85% at 50% 30%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.48) 100%);
+}
+
+/* Proscenium arch (frame) */
+.tk-proscenium {
+  padding: 18px 22px 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #62411e, #3b2612 60%) padding-box;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.45);
+}
+.tk-proscenium > .tk-stage,
+.tk-proscenium.tk-stage {
+  box-shadow: inset 0 8px 28px rgba(0, 0, 0, 0.55);
+  border-radius: 12px;
+}
+
+/* Velvet valance (scalloped top curtain) */
+.tk-valance {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 18px;
+  height: 92px;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(120, 0, 70, 0.85) 0 22px,
+    rgba(95, 0, 55, 0.85) 22px 44px
+  );
+  -webkit-mask:
+    radial-gradient(22px at 22px 100%, #000 98%, transparent 101%) repeat-x,
+    linear-gradient(#000, #000);
+  -webkit-mask-size:
+    44px 100%,
+    100% 100%;
+  -webkit-mask-position:
+    0 0,
+    0 0;
+  mask:
+    radial-gradient(22px at 22px 100%, #000 98%, transparent 101%) repeat-x,
+    linear-gradient(#000, #000);
+  mask-size:
+    44px 100%,
+    100% 100%;
+  mask-position:
+    0 0,
+    0 0;
+  border-bottom: 2px solid rgba(255, 230, 160, 0.25);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* Side wings (curtains) */
+.tk-wing {
+  position: absolute;
+  top: 100px;
+  bottom: 24%;
+  width: 76px;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(90, 0, 50, 0.9) 0 18px,
+    rgba(70, 0, 40, 0.92) 18px 36px
+  );
+  box-shadow:
+    inset 6px 0 12px rgba(0, 0, 0, 0.45),
+    0 10px 20px rgba(0, 0, 0, 0.35);
+}
+.tk-wing-left {
+  left: 22px;
+  border-top-left-radius: 10px;
+}
+.tk-wing-right {
+  right: 22px;
+  border-top-right-radius: 10px;
+}
+
+/* Stage floor (perspective + planks) */
+.tk-floor {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 0;
+  height: 28%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, #3b2a1a 0 140px, #312315 140px 146px),
+    linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%);
+  transform-origin: bottom center;
+  transform: perspective(900px) rotateX(8deg);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow:
+    inset 0 30px 80px rgba(0, 0, 0, 0.65),
+    0 -10px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Footlights */
+.tk-footlights {
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 6px;
+  height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+      closest-side at 12px 50%,
+      rgba(255, 250, 200, 0.9),
+      rgba(255, 250, 200, 0) 70%
+    )
+    0 0 / 48px 100% repeat-x;
+}
+.tk-footlights::after {
+  content: '';
+  position: absolute;
+  inset: -70px 0 0 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(255, 250, 200, 0.18), rgba(255, 250, 200, 0));
+  filter: blur(10px);
+}
+
+/* Optional audience silhouettes */
+.tk-audience {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 40px;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(16px 12px at 12px 80%, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 70%) 0 14px / 36px
+      100% repeat-x,
+    radial-gradient(13px 10px at 30px 100%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 70%) 0 8px / 40px
+      100% repeat-x;
+  filter: blur(0.5px);
+  opacity: 0.45;
+}
+
+/* Spotlight overlay (used with tkSpotlight) */
+.tk-stage .tk-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    520px 260px at var(--mx, 50%) var(--my, 20%),
+    rgba(255, 255, 220, 0.08),
+    transparent 60%
+  );
+  transition: background-position 60ms linear;
+}
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  .tk-floor {
+    transform: none;
+  }
+}
+@media (prefers-reduced-data: reduce) {
+  .tk-footlights::after,
+  .tk-spotlight {
+    display: none;
+  }
+}
+
+/* Slightly frosted bubbles over the set */
+.tk-content > * .msg,
+.tk-content .rounded-bubble {
+  backdrop-filter: blur(2px);
+  background-color: rgba(255, 255, 255, 0.06); /* fallback if color-mix() not supported */
+}
