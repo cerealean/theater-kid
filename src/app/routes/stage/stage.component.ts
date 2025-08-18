@@ -1,4 +1,13 @@
-import { Component, effect, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  effect,
+  signal,
+  inject,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -14,13 +23,13 @@ import { ConfigService } from '../../core/services/config.service';
   standalone: true,
   selector: 'tk-stage',
   imports: [CommonModule, FormsModule],
-  templateUrl: './stage.component.html'
+  templateUrl: './stage.component.html',
 })
 export class StageComponent implements OnInit {
   private config = inject(ConfigService);
   private route = inject(ActivatedRoute);
-  
-  provider = signal<'openrouter'|'openai'>(this.config.getProvider());
+
+  provider = signal<'openrouter' | 'openai'>(this.config.getProvider());
   model = signal<string>(this.config.getModel());
   system = signal<string>(this.config.getSystem());
   input = signal<string>('');
@@ -30,27 +39,49 @@ export class StageComponent implements OnInit {
   sceneId = signal<string | null>(null);
 
   // Getters and setters for ngModel
-  get inputValue() { return this.input(); }
-  set inputValue(value: string) { this.input.set(value); }
-  
-  get systemValue() { return this.system(); }
-  set systemValue(value: string) { this.system.set(value); }
-  
-  get modelValue() { return this.model(); }
-  set modelValue(value: string) { this.model.set(value); }
-  
-  get providerValue() { return this.provider(); }
-  set providerValue(value: 'openrouter'|'openai') { this.provider.set(value); }
+  get inputValue() {
+    return this.input();
+  }
+  set inputValue(value: string) {
+    this.input.set(value);
+  }
+
+  get systemValue() {
+    return this.system();
+  }
+  set systemValue(value: string) {
+    this.system.set(value);
+  }
+
+  get modelValue() {
+    return this.model();
+  }
+  set modelValue(value: string) {
+    this.model.set(value);
+  }
+
+  get providerValue() {
+    return this.provider();
+  }
+  set providerValue(value: 'openrouter' | 'openai') {
+    this.provider.set(value);
+  }
 
   private abort?: AbortController;
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
 
-  constructor(public md: MarkdownService) { 
-    this.finishOAuthIfNeeded(); 
-    
+  constructor(public md: MarkdownService) {
+    this.finishOAuthIfNeeded();
+
+    // Auto-scroll to bottom when messages change
+    effect(() => {
+      this.messages(); // Track changes to messages
+      setTimeout(() => this.scrollToBottom(), 50);
+    });
+
     // Watch for route parameter changes
-    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.sceneId.set(params.get('sceneId'));
     });
   }
@@ -59,24 +90,34 @@ export class StageComponent implements OnInit {
     // Component initialization if needed
   }
 
+  private scrollToBottom(): void {
+    const messagesContainer = document.querySelector('.overflow-y-auto');
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  }
+
   async finishOAuthIfNeeded() {
     const key = await finishOpenRouterPKCE();
     if (key) {
       localStorage.setItem('tk:openrouter', key);
       this.openrouter.setKey(key);
-      this.messages.update(m => [...m, { role: 'system', content: '✅ OpenRouter connected.' }]);
+      this.messages.update((m) => [...m, { role: 'system', content: '✅ OpenRouter connected.' }]);
     } else {
       const existing = localStorage.getItem('tk:openrouter');
       if (existing) this.openrouter.setKey(existing);
     }
   }
 
-  connectOpenRouter() { startOpenRouterPKCE(location.origin + location.pathname); }
+  connectOpenRouter() {
+    startOpenRouterPKCE(location.origin + location.pathname);
+  }
   saveOpenAIKey(raw: string) {
-    const key = raw.trim(); if (!key) return;
+    const key = raw.trim();
+    if (!key) return;
     localStorage.setItem('tk:openai', key);
     this.openai.setKey(key);
-    this.messages.update(m => [...m, { role: 'system', content: '🔑 OpenAI key saved.' }]);
+    this.messages.update((m) => [...m, { role: 'system', content: '🔑 OpenAI key saved.' }]);
   }
 
   onEnterKey(event: KeyboardEvent) {
@@ -91,9 +132,9 @@ export class StageComponent implements OnInit {
     if (!text || this.busy()) return;
 
     if (this.systemValue && this.messages().length === 0) {
-      this.messages.update(m => [...m, { role: 'system', content: this.systemValue }]);
+      this.messages.update((m) => [...m, { role: 'system', content: this.systemValue }]);
     }
-    this.messages.update(m => [...m, { role: 'user', content: text }]);
+    this.messages.update((m) => [...m, { role: 'user', content: text }]);
     this.inputValue = '';
     this.busy.set(true);
 
@@ -104,7 +145,7 @@ export class StageComponent implements OnInit {
 
     if (this.streaming()) {
       let acc = '';
-      this.messages.update(m => [...m, { role: 'assistant', content: '…' }]);
+      this.messages.update((m) => [...m, { role: 'assistant', content: '…' }]);
       const idx = this.messages().length - 1;
       try {
         await svc.createChat({
@@ -117,21 +158,26 @@ export class StageComponent implements OnInit {
             const copy = this.messages().slice();
             copy[idx] = { role: 'assistant', content: acc };
             this.messages.set(copy);
-          }
+          },
         });
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
+        this.messages.update((m) => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
       } finally {
         this.busy.set(false);
       }
     } else {
       try {
-        const res = await svc.createChat({ model, messages: this.messages(), stream: false, abortSignal: this.abort.signal });
-        this.messages.update(m => [...m, { role: 'assistant', content: res?.text ?? '' }]);
+        const res = await svc.createChat({
+          model,
+          messages: this.messages(),
+          stream: false,
+          abortSignal: this.abort.signal,
+        });
+        this.messages.update((m) => [...m, { role: 'assistant', content: res?.text ?? '' }]);
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
+        this.messages.update((m) => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
       } finally {
         this.busy.set(false);
       }
