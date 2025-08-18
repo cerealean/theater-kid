@@ -10,11 +10,19 @@ import { OpenRouterProvider } from '../../core/llm/openrouter.provider';
 import { startOpenRouterPKCE, finishOpenRouterPKCE } from '../../core/llm/openrouter.oauth';
 import { ConfigService } from '../../core/services/config.service';
 import { SpotlightDirective } from '../../shared/spotlight.directive';
+import { StageInputComponent } from './stage-input/stage-input.component';
+import { TheaterBoothComponent } from './theater-booth/theater-booth.component';
 
 @Component({
   standalone: true,
   selector: 'tk-stage',
-  imports: [CommonModule, FormsModule, SpotlightDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SpotlightDirective,
+    StageInputComponent,
+    TheaterBoothComponent,
+  ],
   templateUrl: './stage.component.html',
 })
 export class StageComponent implements OnInit {
@@ -293,14 +301,14 @@ export class StageComponent implements OnInit {
   }
 
   async send() {
-    const text = this.inputValue.trim();
+    const text = this.input().trim();
     if (!text || this.busy()) return;
 
-    if (this.systemValue && this.messages().length === 0) {
-      this.messages.update((m) => [...m, { role: 'system', content: this.systemValue }]);
+    if (this.system() && this.messages().length === 0) {
+      this.messages.update((m) => [...m, { role: 'system', content: this.system() }]);
     }
     this.messages.update((m) => [...m, { role: 'user', content: text }]);
-    this.inputValue = '';
+    this.input.set('');
     this.busy.set(true);
 
     const svc = this.provider() === 'openai' ? this.openai : this.openrouter;
