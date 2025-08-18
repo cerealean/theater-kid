@@ -12,6 +12,7 @@ import { ConfigService } from '../../core/services/config.service';
 import { SpotlightDirective } from '../../shared/spotlight.directive';
 import { StageInputComponent } from './stage-input/stage-input.component';
 import { TheaterBoothComponent } from './theater-booth/theater-booth.component';
+import { EmptyMessagesDisplay } from './empty-messages-display/empty-messages-display';
 
 @Component({
   standalone: true,
@@ -22,6 +23,7 @@ import { TheaterBoothComponent } from './theater-booth/theater-booth.component';
     SpotlightDirective,
     StageInputComponent,
     TheaterBoothComponent,
+    EmptyMessagesDisplay,
   ],
   templateUrl: './stage.component.html',
 })
