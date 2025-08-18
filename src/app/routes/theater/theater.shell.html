@@ -1,15 +1,74 @@
 <div class="min-h-screen grid grid-rows-[auto_1fr]">
   <header class="sticky top-0 z-10 backdrop-blur bg-black/30 border-b border-white/10">
     <nav class="max-w-screen-xl mx-auto px-4 py-3 flex items-center gap-3">
-      <a routerLink="/stage" class="font-semibold tracking-wide">🎭 Theater Kid</a>
-      <a routerLink="/stage" class="tk-btn">Stage</a>
-      <a routerLink="/backstage" class="tk-btn">Backstage</a>
-      <button class="tk-btn ml-auto" (click)="toggleTheme()">
-        <span>{{ theme() === 'dark' ? '🌙' : '☀️' }}</span> Theme
+      <!-- Hamburger menu button for mobile -->
+      <button class="tk-btn md:hidden" (click)="toggleSideMenu()" aria-label="Toggle menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
       </button>
+
+      <a routerLink="/stage" class="font-semibold tracking-wide">🎭 Theater Kid</a>
+
+      <!-- Desktop navigation -->
+      <div class="hidden md:flex items-center gap-3">
+        <a routerLink="/stage" class="tk-btn">Stage</a>
+        <a routerLink="/backstage" class="tk-btn">Backstage</a>
+        <button class="tk-btn" (click)="toggleTheme()">
+          <span>{{ theme() === 'dark' ? '🌙' : '☀️' }}</span> Theme
+        </button>
+      </div>
     </nav>
   </header>
-  <main class="tk-stage overflow-auto" appSpotlight>
+
+  <!-- Mobile side menu overlay -->
+  <div *ngIf="isSideMenuOpen()" class="fixed inset-0 z-50 md:hidden" (click)="closeSideMenu()">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+    <!-- Side menu -->
+    <div
+      class="absolute left-0 top-0 h-full w-64 bg-surface border-r border-white/10 shadow-stage"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Menu header -->
+      <div class="px-4 py-6 border-b border-white/10">
+        <div class="flex items-center justify-between">
+          <span class="font-semibold tracking-wide">🎭 Theater Kid</span>
+          <button class="tk-btn !p-2" (click)="closeSideMenu()" aria-label="Close menu">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu items -->
+      <nav class="px-4 py-6 space-y-3">
+        <a routerLink="/stage" class="tk-btn w-full justify-start" (click)="closeSideMenu()">
+          🎭 Stage
+        </a>
+        <a routerLink="/backstage" class="tk-btn w-full justify-start" (click)="closeSideMenu()">
+          🎬 Backstage
+        </a>
+        <button class="tk-btn w-full justify-start" (click)="toggleTheme(); closeSideMenu()">
+          <span>{{ theme() === 'dark' ? '🌙' : '☀️' }}</span> Theme
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <main class="tk-stage overflow-auto" tkSpotlight>
     <div class="tk-theater-spotlight"></div>
     <router-outlet />
   </main>

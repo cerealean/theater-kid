@@ -1,41 +1,180 @@
-<div class="min-h-[calc(100vh-56px)] grid grid-rows-[auto_1fr_auto]">
-  <div class="container max-w-screen-md mx-auto p-4 space-y-3">
-    @for (m of messages(); track m.content) {
-      <div class="flex">
-        <div
-          class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10"
-          [ngClass]="{
-            'ml-auto': m.role === 'user',
-            'bg-white/5': m.role !== 'assistant',
-            'bg-purple-500/10': m.role === 'assistant',
-          }"
-        >
-          @if (m.role === 'system') {
-            <div class="text-xs opacity-70 mb-1">System</div>
-          }
-          <div class="prose prose-invert max-w-none" [innerHTML]="md.render(m.content)"></div>
-        </div>
-      </div>
-    }
-  </div>
-
-  <div class="border-t border-white/10">
-    <div class="max-w-screen-md mx-auto p-4">
-      <textarea
-        class="tk-input w-full p-3"
-        rows="4"
-        placeholder="Type and hit Send… (Shift+Enter newline)"
-        [(ngModel)]="inputValue"
-        (keydown.enter)="onEnterKey($any($event))"
-      ></textarea>
-      <div class="mt-2 flex items-center justify-end gap-2">
-        <input
-          class="tk-input px-3 py-2 w-full"
-          placeholder="(optional) System prompt for this scene"
-          [(ngModel)]="systemValue"
-        />
-        <button class="tk-btn" (click)="send()" [disabled]="busy()">Send</button>
+<div class="h-[calc(100vh-56px)] flex flex-col lg:flex-row">
+  <!-- Main chat area -->
+  <div class="flex-1 flex flex-col">
+    <!-- Messages area with fixed height and scroll -->
+    <div class="flex-1 overflow-y-auto min-h-0">
+      <div class="container max-w-screen-md mx-auto p-4 space-y-3">
+        @for (m of messages(); track m.content) {
+          <div class="flex">
+            <div
+              class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10"
+              [ngClass]="{
+                'ml-auto': m.role === 'user',
+                'bg-white/5': m.role !== 'assistant',
+                'bg-purple-500/10': m.role === 'assistant',
+              }"
+            >
+              @if (m.role === 'system') {
+                <div class="text-xs opacity-70 mb-1">System</div>
+              }
+              <div class="prose prose-invert max-w-none" [innerHTML]="md.render(m.content)"></div>
+            </div>
+          </div>
+        }
+        @if (messages().length === 0) {
+          <div class="flex items-center justify-center h-full text-white/60">
+            <div class="text-center">
+              <div class="text-4xl mb-4">🎭</div>
+              <div class="text-lg">Welcome to the Stage</div>
+              <div class="text-sm">Start a conversation to begin your scene</div>
+            </div>
+          </div>
+        }
       </div>
     </div>
+
+    <!-- Input area pinned to bottom -->
+    <div class="flex-shrink-0 border-t border-white/20 bg-black/40 backdrop-blur-sm shadow-lg">
+      <div class="max-w-screen-md mx-auto p-4">
+        <textarea
+          class="tk-input w-full p-3 resize-none"
+          rows="4"
+          placeholder="Type and hit Send… (Shift+Enter newline)"
+          [(ngModel)]="inputValue"
+          (keydown.enter)="onEnterKey($any($event))"
+        ></textarea>
+        <div class="mt-3 flex items-center justify-end gap-2">
+          <input
+            class="tk-input px-3 py-2 w-full"
+            placeholder="(optional) System prompt for this scene"
+            [(ngModel)]="systemValue"
+          />
+          <button class="tk-btn px-4 py-2 font-medium" (click)="send()" [disabled]="busy()">
+            {{ busy() ? 'Sending...' : 'Send' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theater Booth - Character Information Staging Area -->
+  <div
+    class="w-full lg:w-80 flex-shrink-0 tk-theater-booth tk-booth-border tk-booth-glow border-t lg:border-t-0 lg:border-l border-amber-400/30 relative overflow-hidden"
+  >
+    <!-- Velvet curtain effect -->
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-red-800/30 via-purple-800/20 to-red-800/30 opacity-60"
+    ></div>
+
+    <!-- Ornate border pattern -->
+    <div class="absolute inset-0 border-2 border-amber-400/20 border-opacity-40"></div>
+    <div class="absolute top-2 left-2 right-2 bottom-2 border border-amber-300/10"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 p-6 h-full flex flex-col">
+      <!-- Booth header -->
+      <div class="text-center mb-6">
+        <div class="text-amber-300 text-lg font-serif mb-2">🎭 Private Booth</div>
+        <div class="h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"></div>
+      </div>
+
+      <!-- Character spotlight -->
+      <div class="bg-black/30 rounded-lg p-4 mb-4 border border-amber-400/20">
+        <div class="text-center">
+          <div
+            class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 flex items-center justify-center text-2xl"
+          >
+            🎪
+          </div>
+          <div class="text-white/90 font-medium">
+            {{ currentCharacter() || 'No Character Selected' }}
+          </div>
+          <div class="text-white/60 text-sm mt-1">
+            {{ characterRole() || 'Awaiting performance...' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Character details -->
+      <div class="flex-1 space-y-4">
+        <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+          <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">Scene Context</div>
+          <div class="text-white/70 text-sm">
+            {{ sceneContext() || 'The stage awaits your direction...' }}
+          </div>
+        </div>
+
+        <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+          <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">Character Traits</div>
+          <div class="text-white/70 text-sm space-y-1">
+            @for (trait of characterTraits(); track trait) {
+              <div class="flex items-center gap-2">
+                <div class="w-1 h-1 rounded-full bg-amber-400/60"></div>
+                <span>{{ trait }}</span>
+              </div>
+            }
+            @if (characterTraits().length === 0) {
+              <div class="text-white/50 italic">Personality emerging...</div>
+            }
+          </div>
+        </div>
+
+        <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+          <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">
+            Performance Notes
+          </div>
+          <div class="text-white/70 text-sm">
+            {{ performanceNotes() || 'Ready for improvisation' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Theater ambiance controls -->
+      <div class="mt-4 pt-4 border-t border-amber-400/20">
+        <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-2">Ambiance</div>
+        <div class="flex gap-2 text-lg mb-3">
+          <button
+            class="hover:scale-110 transition-transform hover:text-yellow-300"
+            title="Spotlight"
+            (click)="toggleSpotlight()"
+          >
+            🔦
+          </button>
+          <button
+            class="hover:scale-110 transition-transform hover:text-red-300"
+            title="Curtains"
+            (click)="toggleCurtains()"
+          >
+            🎭
+          </button>
+          <button
+            class="hover:scale-110 transition-transform hover:text-blue-300"
+            title="Music"
+            (click)="toggleMusic()"
+          >
+            🎵
+          </button>
+          <button
+            class="hover:scale-110 transition-transform hover:text-green-300"
+            title="Applause"
+            (click)="triggerApplause()"
+          >
+            👏
+          </button>
+        </div>
+        <button
+          class="w-full text-xs py-1 px-2 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white/90 transition-colors"
+          title="Reset Character Information"
+          (click)="resetCharacter()"
+        >
+          Reset Booth
+        </button>
+      </div>
+    </div>
+
+    <!-- Subtle spotlight effect -->
+    <div
+      class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl"
+    ></div>
   </div>
 </div>

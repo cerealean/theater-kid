@@ -15,6 +15,7 @@ export class TheaterShell {
   private document = inject(DOCUMENT);
 
   theme = signal<'dark' | 'light'>(this.config.getTheme());
+  isSideMenuOpen = signal<boolean>(false);
 
   constructor() {
     this.document.documentElement.setAttribute('data-theme', this.theme());
@@ -25,5 +26,13 @@ export class TheaterShell {
     this.theme.set(newTheme);
     this.config.setTheme(newTheme);
     this.document.documentElement.setAttribute('data-theme', newTheme);
+  }
+
+  toggleSideMenu() {
+    this.isSideMenuOpen.set(!this.isSideMenuOpen());
+  }
+
+  closeSideMenu() {
+    this.isSideMenuOpen.set(false);
   }
 }
