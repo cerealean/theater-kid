@@ -60,26 +60,25 @@ For more information on using the Angular CLI, including detailed command refere
 
 ## Development Workflow
 
-This project uses **Commitizen** and **Husky** to ensure clean commits and maintain code quality.
+This project uses **Commitlint** and **Husky** to ensure clean commits and maintain code quality.
 
 ### Making Commits
 
-Instead of using `git commit`, use the interactive commitizen CLI:
+Use standard git commit commands with conventional commit message format:
 
 ```bash
-npm run commit
+git commit -m "feat: add new feature"
 ```
 
-This will guide you through creating a conventional commit message with the proper format.
+All commit messages are automatically validated against conventional commit standards.
 
 ### Pre-commit Hooks
 
-The following checks run automatically before each commit:
+The following checks run automatically:
 
-- **Prettier** formatting on all staged files
-- Files are automatically staged after formatting
+- **Pre-commit**: Prettier formatting on all staged files
+- **Commit-msg**: Conventional commit message validation
 
 ### Available Scripts
 
-- `npm run commit` - Interactive commit with commitizen (recommended)
 - `npm run prepare` - Install husky hooks (runs automatically after npm install)
