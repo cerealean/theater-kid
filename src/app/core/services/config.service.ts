@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { StorageService } from './storage.service';
 
 export type Provider = 'openrouter' | 'openai';
@@ -40,6 +40,21 @@ export class ConfigService {
   readonly system = signal<string>(
     this.storage.getItem(this.STORAGE_KEYS.system) ?? this.DEFAULTS.system,
   );
+
+  constructor() {
+    effect(() => {
+      this.storage.setItem(this.STORAGE_KEYS.theme, this.theme());
+    });
+    effect(() => {
+      this.storage.setItem(this.STORAGE_KEYS.provider, this.provider());
+    });
+    effect(() => {
+      this.storage.setItem(this.STORAGE_KEYS.model, this.model());
+    });
+    effect(() => {
+      this.storage.setItem(this.STORAGE_KEYS.system, this.system());
+    });
+  }
 
   getOpenRouterKey(): string | null {
     return localStorage.getItem(this.STORAGE_KEYS.openrouter);
