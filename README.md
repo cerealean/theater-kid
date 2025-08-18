@@ -1,6 +1,15 @@
-# TheaterKid
+# 🎭 Theater Kid
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
+A modern Angular chat application for AI conversations with a theatrical theme.
+
+## Features
+
+- 🎪 **Multiple AI Providers**: Support for OpenAI and OpenRouter
+- 💬 **Real-time Streaming**: Live response streaming from AI models  
+- 🎨 **Beautiful UI**: Theater-inspired design with spotlight effects
+- 🌙 **Dark/Light Theme**: Toggle between themes
+- 📱 **Responsive**: Works on all screen sizes
+- 🔒 **Secure**: Proper markdown sanitization and type safety
 
 ## Quick Start with GitHub Codespaces
 
@@ -13,15 +22,21 @@ Get started instantly with a fully configured Angular development environment in
 3. Run `npm start` to start the development server
 4. Your Angular app will be available at the forwarded port
 
-## Development server
-
-To start a local development server, run:
+## Local Development
 
 ```bash
-ng serve
-```
+# Install dependencies
+npm install
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Start development server
+npm start
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+```
 
 ## Code scaffolding
 

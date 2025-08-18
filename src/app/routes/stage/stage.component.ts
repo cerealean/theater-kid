@@ -1,11 +1,14 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { ChatMessage } from '../../core/llm/types';
 import { MarkdownService } from '../../core/markdown/markdown.service';
 import { OpenAIProvider } from '../../core/llm/openai.provider';
 import { OpenRouterProvider } from '../../core/llm/openrouter.provider';
 import { startOpenRouterPKCE, finishOpenRouterPKCE } from '../../core/llm/openrouter.oauth';
+import { ConfigService } from '../../core/services/config.service';
 
 @Component({
   standalone: true,
@@ -13,14 +16,18 @@ import { startOpenRouterPKCE, finishOpenRouterPKCE } from '../../core/llm/openro
   imports: [CommonModule, FormsModule],
   templateUrl: './stage.component.html'
 })
-export class StageComponent {
-  provider = signal<'openrouter'|'openai'>((localStorage.getItem('tk:provider') as any) || 'openrouter');
-  model = signal<string>(localStorage.getItem('tk:model') || 'openai/gpt-4o-mini');
-  system = signal<string>(localStorage.getItem('tk:system') || '');
+export class StageComponent implements OnInit {
+  private config = inject(ConfigService);
+  private route = inject(ActivatedRoute);
+  
+  provider = signal<'openrouter'|'openai'>(this.config.getProvider());
+  model = signal<string>(this.config.getModel());
+  system = signal<string>(this.config.getSystem());
   input = signal<string>('');
   messages = signal<ChatMessage[]>([]);
   streaming = signal<boolean>(true);
   busy = signal<boolean>(false);
+  sceneId = signal<string | null>(null);
 
   // Getters and setters for ngModel
   get inputValue() { return this.input(); }
@@ -39,7 +46,18 @@ export class StageComponent {
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
 
-  constructor(public md: MarkdownService) { this.finishOAuthIfNeeded(); }
+  constructor(public md: MarkdownService) { 
+    this.finishOAuthIfNeeded(); 
+    
+    // Watch for route parameter changes
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
+      this.sceneId.set(params.get('sceneId'));
+    });
+  }
+
+  ngOnInit(): void {
+    // Component initialization if needed
+  }
 
   async finishOAuthIfNeeded() {
     const key = await finishOpenRouterPKCE();
@@ -101,8 +119,9 @@ export class StageComponent {
             this.messages.set(copy);
           }
         });
-      } catch (e: any) {
-        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + (e?.message || e) }]);
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
       } finally {
         this.busy.set(false);
       }
@@ -110,8 +129,9 @@ export class StageComponent {
       try {
         const res = await svc.createChat({ model, messages: this.messages(), stream: false, abortSignal: this.abort.signal });
         this.messages.update(m => [...m, { role: 'assistant', content: res?.text ?? '' }]);
-      } catch (e: any) {
-        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + (e?.message || e) }]);
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        this.messages.update(m => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
       } finally {
         this.busy.set(false);
       }

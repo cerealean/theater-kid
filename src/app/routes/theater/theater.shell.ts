@@ -1,7 +1,8 @@
-import { Component, DOCUMENT, Inject, signal } from '@angular/core';
+import { Component, DOCUMENT, Inject, signal, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Spotlight } from '../../core/directives/spotlight';
+import { ConfigService } from '../../core/services/config.service';
 
 @Component({
   standalone: true,
@@ -15,15 +16,18 @@ import { Spotlight } from '../../core/directives/spotlight';
   templateUrl: './theater.shell.html',
 })
 export class TheaterShell {
-  theme = signal<'dark' | 'light'>((localStorage.getItem('tk:theme') as any) || 'dark');
+  private config = inject(ConfigService);
+  
+  theme = signal<'dark' | 'light'>(this.config.getTheme());
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.document.documentElement.setAttribute('data-theme', this.theme());
   }
 
   toggleTheme() {
-    this.theme.update(t => t === 'dark' ? 'light' : 'dark');
-    this.document.documentElement.setAttribute('data-theme', this.theme());
-    localStorage.setItem('tk:theme', this.theme());
+    const newTheme = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(newTheme);
+    this.config.setTheme(newTheme);
+    this.document.documentElement.setAttribute('data-theme', newTheme);
   }
 }
