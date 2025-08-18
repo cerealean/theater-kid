@@ -20,26 +20,34 @@ html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--
 /* Base stage background */
 .tk-stage {
   position: relative;
+  /* min-height: 100%; */
   background:
-    radial-gradient(1200px 600px at 50% 0%, hsl(var(--tk-primary) / .15), transparent 60%),
-    radial-gradient(900px 480px at 50% 100%, hsl(var(--tk-accent) / .08), transparent 60%),
-    linear-gradient(to bottom, hsl(var(--tk-surface)), color-mix(in oklab, black 25%, hsl(var(--tk-surface))) 70%);
-  isolation: isolate; /* keeps overlays from blending with outside */
+    /* Top glow */
+    radial-gradient(50% 35% at 50% 0%,
+      rgba(125, 43, 124, 0.18), transparent 60%),
+    /* Bottom glow */
+    radial-gradient(50% 35% at 50% 100%,
+      rgba(63, 182, 255, 0.12), transparent 60%),
+    /* Base */
+    linear-gradient(#17141d, #0e0c12 70%);
+    isolation: isolate; /* keeps overlays from blending with outside */
 }
 
 /* Soft vignette */
 .tk-stage::after {
   content: "";
-  position: absolute; inset: 0;
+  position: absolute; 
+  inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(120% 80% at 50% 30%, transparent 60%, rgba(0,0,0,.45) 100%);
-}
+  background: radial-gradient(120% 85% at 50% 30%,
+    rgba(0,0,0,0) 60%, rgba(0,0,0,0.48) 100%);
+  }
 
 /* Optional ultra-light film grain (SVG data URI) */
 .tk-stage::before {
   content: "";
-  position: absolute; inset: 0;
+  position: absolute; 
+  inset: 0;
   pointer-events: none;
   opacity: .05;
   mix-blend-mode: overlay;

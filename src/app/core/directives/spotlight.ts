@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '.tk-theater-spotlight'
+  selector: '[tkSpotlight]',
 })
 export class Spotlight {
   constructor(private el: ElementRef<HTMLElement>) { }
