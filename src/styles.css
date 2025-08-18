@@ -16,3 +16,45 @@
 html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--tk-text)); }
 .tk-btn   { @apply inline-flex items-center gap-2 rounded-md px-3 py-2 border border-white/10 bg-white/5 hover:bg-white/10; }
 .tk-input { @apply rounded-md bg-white/5 border-white/10 text-white placeholder-white/50; }
+
+/* Base stage background */
+tk-stage {
+  position: relative;
+  background:
+    radial-gradient(1200px 600px at 50% 0%, hsl(var(--tk-primary) / .15), transparent 60%),
+    radial-gradient(900px 480px at 50% 100%, hsl(var(--tk-accent) / .08), transparent 60%),
+    linear-gradient(to bottom, hsl(var(--tk-surface)), color-mix(in oklab, black 25%, hsl(var(--tk-surface))) 70%);
+  isolation: isolate; /* keeps overlays from blending with outside */
+}
+
+/* Soft vignette */
+tk-stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% 30%, transparent 60%, rgba(0,0,0,.45) 100%);
+}
+
+/* Optional ultra-light film grain (SVG data URI) */
+tk-stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: .05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter>\
+<rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/>\
+</svg>");
+  background-size: 256px 256px;
+}
+
+/* Respect users who dislike motion or large assets */
+@media (prefers-reduced-motion: reduce) {
+  tk-stage { scroll-behavior: auto; }
+}
+@media (prefers-reduced-data: reduce) {
+  tk-stage::before { display: none; } /* drop noise for data-savers */
+}
