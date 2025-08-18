@@ -1,0 +1,8 @@
+<div class="min-h-screen p-4">
+  <h1>Theater Kid Stage</h1>
+  <div *ngFor="let m of messages()">
+    <p>{{m.role}}: {{m.content}}</p>
+  </div>
+  <textarea [(ngModel)]="inputValue" placeholder="Type here"></textarea>
+  <button (click)="send()">Send</button>
+</div>

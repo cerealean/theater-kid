@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theater Kid brand tokens */
+:root {
+  --tk-primary: 288 47% 33%;  /* velvet purple */
+  --tk-accent: 199 91% 56%;   /* spotlight blue */
+  --tk-surface: 260 15% 10%;  /* stage */
+  --tk-text: 0 0% 98%;
+}
+[data-theme="light"] {
+  --tk-surface: 260 10% 98%;
+  --tk-text: 260 15% 10%;
+}
+html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--tk-text)); }
+.tk-btn   { @apply inline-flex items-center gap-2 rounded-md px-3 py-2 border border-white/10 bg-white/5 hover:bg-white/10; }
+.tk-input { @apply rounded-md bg-white/5 border-white/10 text-white placeholder-white/50; }
