@@ -2,6 +2,17 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
 
+## Quick Start with GitHub Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cerealean/theater-kid)
+
+Get started instantly with a fully configured Angular development environment in the cloud:
+
+1. Click the "Open in GitHub Codespaces" badge above
+2. Wait for the environment to initialize (dependencies install automatically)
+3. Run `npm start` to start the development server
+4. Your Angular app will be available at the forwarded port
+
 ## Development server
 
 To start a local development server, run:
