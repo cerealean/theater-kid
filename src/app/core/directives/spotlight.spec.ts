@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Spotlight } from './spotlight';
 
 @Component({
-  template: '<div appSpotlight></div>',
+  template: '<div tkSpotlight></div>',
   standalone: true,
   imports: [Spotlight],
 })
