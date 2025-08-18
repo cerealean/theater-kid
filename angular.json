@@ -5,7 +5,21 @@
   "projects": {
     "theater-kid": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css",
+          "skipTests": false
+        },
+        "@schematics/angular:service": {
+          "skipTests": false
+        },
+        "@schematics/angular:directive": {
+          "skipTests": false
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "tk",
