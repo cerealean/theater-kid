@@ -1,5 +1,7 @@
 export async function startOpenRouterPKCE(callbackUrl: string) {
-  const codeVerifier = crypto.getRandomValues(new Uint8Array(32)).reduce((a,b)=>a+('0'+b.toString(16)).slice(-2),'');
+  const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+  const hexArray = Array.from(randomBytes, byte => ('0' + byte.toString(16)).slice(-2));
+  const codeVerifier = hexArray.join('');
   const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
   const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hash))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   sessionStorage.setItem('or_code_verifier', codeVerifier);
