@@ -15,9 +15,7 @@ jobs:
         node-version: [22.x]
 
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
 
     steps:
       - name: Checkout code
