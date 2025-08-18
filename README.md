@@ -57,3 +57,29 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Development Workflow
+
+This project uses **Commitizen** and **Husky** to ensure clean commits and maintain code quality.
+
+### Making Commits
+
+Instead of using `git commit`, use the interactive commitizen CLI:
+
+```bash
+npm run commit
+```
+
+This will guide you through creating a conventional commit message with the proper format.
+
+### Pre-commit Hooks
+
+The following checks run automatically before each commit:
+
+- **Prettier** formatting on all staged files
+- Files are automatically staged after formatting
+
+### Available Scripts
+
+- `npm run commit` - Interactive commit with commitizen (recommended)
+- `npm run prepare` - Install husky hooks (runs automatically after npm install)
