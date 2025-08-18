@@ -19,7 +19,7 @@
             id="tk-stage-messages"
             class="container max-w-screen-md mx-auto p-4 space-y-3 mt-[96px]"
           >
-            @for (m of messages(); track m.content) {
+            @for (m of messages(); track m.tkid) {
               <div class="flex">
                 <div
                   class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10"

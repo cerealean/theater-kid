@@ -1,6 +1,7 @@
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
+  tkid?: string;
 }
 export interface CreateChatParams {
   model: string;

@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { StageComponent } from './stage.component';
 import { MarkdownService } from '../../core/markdown/markdown.service';
 import { ConfigService } from '../../core/services/config.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('StageComponent', () => {
   let component: StageComponent;
@@ -89,10 +90,12 @@ describe('StageComponent', () => {
 
   it('should analyze character from messages', () => {
     const systemMessage = {
+      tkid: uuidv4(),
       role: 'system' as const,
       content: 'You are Gandalf the wizard, wise and powerful.',
     };
     const assistantMessage = {
+      tkid: uuidv4(),
       role: 'assistant' as const,
       content:
         'I am wise and ancient, with vast knowledge and wisdom. My mysterious powers and mysterious knowledge guide me.',
