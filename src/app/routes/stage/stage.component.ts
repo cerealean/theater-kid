@@ -12,7 +12,7 @@ import { ConfigService } from '../../core/services/config.service';
 
 @Component({
   standalone: true,
-  selector: 'app-stage',
+  selector: 'tk-stage',
   imports: [CommonModule, FormsModule],
   templateUrl: './stage.component.html',
 })

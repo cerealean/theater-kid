@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   standalone: true,
-  selector: 'app-root',
+  selector: 'tk-root',
   imports: [RouterOutlet],
   template: '<router-outlet />',
 })

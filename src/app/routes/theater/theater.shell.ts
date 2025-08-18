@@ -6,7 +6,7 @@ import { ConfigService } from '../../core/services/config.service';
 
 @Component({
   standalone: true,
-  selector: 'app-theater',
+  selector: 'tk-theater',
   imports: [RouterLink, RouterOutlet, CommonModule, Spotlight],
   templateUrl: './theater.shell.html',
 })
