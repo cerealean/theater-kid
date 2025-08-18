@@ -1,0 +1,24 @@
+# Build artifacts
+dist/
+node_modules/
+
+# Lock files
+package-lock.json
+
+# Config files
+angular.json
+eslint.config.js
+
+# Generated files
+*.min.js
+*.min.css
+
+# Environment files
+.env*
+
+# IDE files
+.vscode/
+.idea/
+
+# Git files
+.git/

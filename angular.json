@@ -8,7 +8,7 @@
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "tk",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -85,11 +85,23 @@
               "src/styles.css"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "57f2befb-6c75-4c19-a4b8-228606b0784c"
+    "analytics": "57f2befb-6c75-4c19-a4b8-228606b0784c",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

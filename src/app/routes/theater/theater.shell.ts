@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, Inject, signal, inject } from '@angular/core';
+import { Component, DOCUMENT, signal, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Spotlight } from '../../core/directives/spotlight';
@@ -12,11 +12,12 @@ import { ConfigService } from '../../core/services/config.service';
 })
 export class TheaterShell {
   private config = inject(ConfigService);
+  private document = inject(DOCUMENT);
 
   theme = signal<'dark' | 'light'>(this.config.getTheme());
   isSideMenuOpen = signal<boolean>(false);
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  constructor() {
     this.document.documentElement.setAttribute('data-theme', this.theme());
   }
 

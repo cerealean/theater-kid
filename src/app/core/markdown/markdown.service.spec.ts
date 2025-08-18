@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { MarkdownService } from './markdown.service';
 import { marked } from 'marked';
 
@@ -18,7 +18,7 @@ describe('MarkdownService', () => {
     domSanitizer = TestBed.inject(DomSanitizer) as jasmine.SpyObj<DomSanitizer>;
 
     // Setup default spy behavior
-    domSanitizer.bypassSecurityTrustHtml.and.returnValue('mocked-safe-html' as any);
+    domSanitizer.bypassSecurityTrustHtml.and.returnValue('mocked-safe-html' as SafeHtml);
   });
 
   it('should be created', () => {
@@ -27,13 +27,13 @@ describe('MarkdownService', () => {
 
   describe('render', () => {
     it('should return empty safe HTML for null input', () => {
-      service.render(null as any);
+      service.render(null as unknown as string);
 
       expect(domSanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('');
     });
 
     it('should return empty safe HTML for undefined input', () => {
-      service.render(undefined as any);
+      service.render(undefined as unknown as string);
 
       expect(domSanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('');
     });
@@ -219,7 +219,7 @@ describe('MarkdownService', () => {
         // Spy on marked.parse to throw an error
         spyOn(marked, 'parse').and.throwError('Parsing failed');
 
-        const result = service.render('# Valid markdown');
+        service.render('# Valid markdown');
 
         expect(console.error).toHaveBeenCalledWith('Error parsing markdown:', jasmine.any(Error));
         expect(domSanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('');
@@ -231,7 +231,7 @@ describe('MarkdownService', () => {
         // Spy on marked.parse to throw an error
         spyOn(marked, 'parse').and.throwError('Mock error');
 
-        const result = service.render('Some markdown');
+        service.render('Some markdown');
 
         expect(domSanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith('');
       });

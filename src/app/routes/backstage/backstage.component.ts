@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
   standalone: true,
   selector: 'tk-backstage',
   template: `
-  <div class="max-w-screen-md mx-auto p-6 space-y-4">
-    <h1 class="text-xl font-semibold">Backstage</h1>
-    <p class="opacity-80">Role editor & settings coming soon.</p>
-  </div>
-  `
+    <div class="max-w-screen-md mx-auto p-6 space-y-4">
+      <h1 class="text-xl font-semibold">Backstage</h1>
+      <p class="opacity-80">Role editor & settings coming soon.</p>
+    </div>
+  `,
 })
 export class BackstageComponent {}

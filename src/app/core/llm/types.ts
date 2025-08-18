@@ -1,4 +1,7 @@
-export type ChatMessage = { role: 'system'|'user'|'assistant'; content: string };
+export interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
 export interface CreateChatParams {
   model: string;
   messages: ChatMessage[];
@@ -6,7 +9,12 @@ export interface CreateChatParams {
   onToken?: (chunk: string) => void;
   abortSignal?: AbortSignal;
 }
-export interface ProviderInfo { id: 'openrouter'|'openai'; label: string; supportsStreaming: boolean; needsBYOK: boolean; }
+export interface ProviderInfo {
+  id: 'openrouter' | 'openai';
+  label: string;
+  supportsStreaming: boolean;
+  needsBYOK: boolean;
+}
 export interface LLMProvider {
   info: ProviderInfo;
   setKey(key: string | null): void;
