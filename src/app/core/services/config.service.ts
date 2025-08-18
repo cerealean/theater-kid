@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { StorageService } from './storage.service';
 
 export type Provider = 'openrouter' | 'openai';
 export type Theme = 'dark' | 'light';
@@ -25,37 +26,20 @@ export class ConfigService {
     theme: 'dark' as Theme,
   } as const;
 
-  getProvider(): Provider {
-    return (localStorage.getItem(this.STORAGE_KEYS.provider) as Provider) || this.DEFAULTS.provider;
-  }
+  readonly storage = inject(StorageService);
 
-  setProvider(provider: Provider): void {
-    localStorage.setItem(this.STORAGE_KEYS.provider, provider);
-  }
-
-  getModel(): string {
-    return localStorage.getItem(this.STORAGE_KEYS.model) || this.DEFAULTS.model;
-  }
-
-  setModel(model: string): void {
-    localStorage.setItem(this.STORAGE_KEYS.model, model);
-  }
-
-  getSystem(): string {
-    return localStorage.getItem(this.STORAGE_KEYS.system) || this.DEFAULTS.system;
-  }
-
-  setSystem(system: string): void {
-    localStorage.setItem(this.STORAGE_KEYS.system, system);
-  }
-
-  getTheme(): Theme {
-    return (localStorage.getItem(this.STORAGE_KEYS.theme) as Theme) || this.DEFAULTS.theme;
-  }
-
-  setTheme(theme: Theme): void {
-    localStorage.setItem(this.STORAGE_KEYS.theme, theme);
-  }
+  readonly theme = signal<Theme>(
+    this.storage.getItem(this.STORAGE_KEYS.theme) ?? this.DEFAULTS.theme,
+  );
+  readonly provider = signal<Provider>(
+    this.storage.getItem(this.STORAGE_KEYS.provider) ?? this.DEFAULTS.provider,
+  );
+  readonly model = signal<string>(
+    this.storage.getItem(this.STORAGE_KEYS.model) ?? this.DEFAULTS.model,
+  );
+  readonly system = signal<string>(
+    this.storage.getItem(this.STORAGE_KEYS.system) ?? this.DEFAULTS.system,
+  );
 
   getOpenRouterKey(): string | null {
     return localStorage.getItem(this.STORAGE_KEYS.openrouter);
