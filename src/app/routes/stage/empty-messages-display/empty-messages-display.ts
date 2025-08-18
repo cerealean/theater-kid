@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'tk-empty-messages-display',
@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
   host: {
     class: 'flex items-center justify-center h-full text-white/60',
   },
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyMessagesDisplay {}
