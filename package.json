@@ -16,24 +16,6 @@
     "release": "semantic-release",
     "prepare": "husky"
   },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "endOfLine": "lf",
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
-  },
-  "lint-staged": {
-    "*.{js,ts,html,css,md,json}": [
-      "prettier --write"
-    ]
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.1.7",
