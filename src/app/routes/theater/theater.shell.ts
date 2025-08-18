@@ -1,11 +1,17 @@
 import { Component, DOCUMENT, Inject, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Spotlight } from '../../core/directives/spotlight';
 
 @Component({
   standalone: true,
   selector: 'tk-theater',
-  imports: [RouterLink, RouterOutlet, CommonModule],
+  imports: [
+    RouterLink, 
+    RouterOutlet, 
+    CommonModule,
+    Spotlight
+  ],
   templateUrl: './theater.shell.html',
 })
 export class TheaterShell {
