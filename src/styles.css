@@ -4,18 +4,27 @@
 
 /* Theater Kid brand tokens */
 :root {
-  --tk-primary: 288 47% 33%;  /* velvet purple */
-  --tk-accent: 199 91% 56%;   /* spotlight blue */
-  --tk-surface: 260 15% 10%;  /* stage */
+  --tk-primary: 288 47% 33%; /* velvet purple */
+  --tk-accent: 199 91% 56%; /* spotlight blue */
+  --tk-surface: 260 15% 10%; /* stage */
   --tk-text: 0 0% 98%;
 }
-[data-theme="light"] {
+[data-theme='light'] {
   --tk-surface: 260 10% 98%;
   --tk-text: 260 15% 10%;
 }
-html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--tk-text)); }
-.tk-btn   { @apply inline-flex items-center gap-2 rounded-md px-3 py-2 border border-white/10 bg-white/5 hover:bg-white/10; }
-.tk-input { @apply rounded-md bg-white/5 border-white/10 text-white placeholder-white/50; }
+html,
+body {
+  height: 100%;
+  background: hsl(var(--tk-surface));
+  color: hsl(var(--tk-text));
+}
+.tk-btn {
+  @apply inline-flex items-center gap-2 rounded-md px-3 py-2 border border-white/10 bg-white/5 hover:bg-white/10;
+}
+.tk-input {
+  @apply rounded-md bg-white/5 border-white/10 text-white placeholder-white/50;
+}
 
 /* Base stage background */
 .tk-stage {
@@ -23,33 +32,91 @@ html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--
   /* min-height: 100%; */
   background:
     /* Top glow */
-    radial-gradient(50% 35% at 50% 0%,
-      rgba(125, 43, 124, 0.18), transparent 60%),
+    radial-gradient(50% 35% at 50% 0%, rgba(125, 43, 124, 0.18), transparent 60%),
     /* Bottom glow */
-    radial-gradient(50% 35% at 50% 100%,
-      rgba(63, 182, 255, 0.12), transparent 60%),
-    /* Base */
-    linear-gradient(#17141d, #0e0c12 70%);
-    isolation: isolate; /* keeps overlays from blending with outside */
+      radial-gradient(50% 35% at 50% 100%, rgba(63, 182, 255, 0.12), transparent 60%),
+    /* Base */ linear-gradient(#17141d, #0e0c12 70%);
+  isolation: isolate; /* keeps overlays from blending with outside */
+}
+
+/* Theater booth styling */
+.tk-theater-booth {
+  background: 
+    /* Velvet texture simulation */
+    repeating-linear-gradient(
+      45deg,
+      rgba(139, 69, 19, 0.1) 0px,
+      rgba(139, 69, 19, 0.1) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    /* Rich velvet color */
+      linear-gradient(
+        135deg,
+        rgba(102, 0, 51, 0.4) 0%,
+        rgba(51, 0, 102, 0.3) 50%,
+        rgba(102, 0, 51, 0.4) 100%
+      ),
+    /* Deep shadows */ radial-gradient(ellipse at top, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+}
+
+/* Ornate border animation */
+.tk-booth-border {
+  position: relative;
+}
+
+.tk-booth-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 48%,
+    rgba(255, 215, 0, 0.3) 49%,
+    rgba(255, 215, 0, 0.3) 51%,
+    transparent 52%
+  );
+  background-size: 20px 20px;
+  animation: shimmer 3s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    background-position: 0% 0%;
+    opacity: 0.2;
+  }
+  50% {
+    background-position: 100% 100%;
+    opacity: 0.4;
+  }
+}
+
+/* Theater booth glow effects */
+.tk-booth-glow {
+  box-shadow:
+    inset 0 0 20px rgba(255, 215, 0, 0.1),
+    inset 0 0 40px rgba(255, 215, 0, 0.05),
+    0 0 30px rgba(139, 69, 19, 0.2);
 }
 
 /* Soft vignette */
 .tk-stage::after {
-  content: "";
-  position: absolute; 
+  content: '';
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(120% 85% at 50% 30%,
-    rgba(0,0,0,0) 60%, rgba(0,0,0,0.48) 100%);
-  }
+  background: radial-gradient(120% 85% at 50% 30%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.48) 100%);
+}
 
 /* Optional ultra-light film grain (SVG data URI) */
 .tk-stage::before {
-  content: "";
-  position: absolute; 
+  content: '';
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: .05;
+  opacity: 0.05;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,\
     <svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'>\
@@ -61,17 +128,24 @@ html, body { height: 100%; background: hsl(var(--tk-surface)); color: hsl(var(--
 
 /* Respect users who dislike motion or large assets */
 @media (prefers-reduced-motion: reduce) {
-  .tk-stage { scroll-behavior: auto; }
+  .tk-stage {
+    scroll-behavior: auto;
+  }
 }
 @media (prefers-reduced-data: reduce) {
-  .tk-stage::before { display: none; } /* drop noise for data-savers */
+  .tk-stage::before {
+    display: none;
+  } /* drop noise for data-savers */
 }
 
 .tk-theater-spotlight {
-  position: absolute; 
-  inset: 0; 
+  position: absolute;
+  inset: 0;
   pointer-events: none;
-  background: radial-gradient(500px 260px at var(--mx, 50%) var(--my, 20%),
-    rgba(255,255,255,.07), transparent 60%);
+  background: radial-gradient(
+    500px 260px at var(--mx, 50%) var(--my, 20%),
+    rgba(255, 255, 255, 0.07),
+    transparent 60%
+  );
   transition: background-position 60ms linear;
 }
