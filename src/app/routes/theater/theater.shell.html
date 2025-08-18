@@ -27,7 +27,15 @@
   </header>
 
   <!-- Mobile side menu overlay -->
-  <div *ngIf="isSideMenuOpen()" class="fixed inset-0 z-50 md:hidden" (click)="closeSideMenu()">
+  <div
+    *ngIf="isSideMenuOpen()"
+    class="fixed inset-0 z-50 md:hidden"
+    (click)="closeSideMenu()"
+    (keydown.escape)="closeSideMenu()"
+    tabindex="0"
+    role="button"
+    aria-label="Close menu overlay"
+  >
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
@@ -35,6 +43,11 @@
     <div
       class="absolute left-0 top-0 h-full w-64 bg-surface border-r border-white/10 shadow-stage"
       (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+      tabindex="0"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigation menu"
     >
       <!-- Menu header -->
       <div class="px-4 py-6 border-b border-white/10">

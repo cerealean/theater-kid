@@ -11,7 +11,7 @@ import { Directive, ElementRef, HostListener, inject } from '@angular/core';
  */
 @Directive({
   standalone: true,
-  selector: '[appSpotlight]',
+  selector: '[tkSpotlight]',
 })
 export class Spotlight {
   private elementRef = inject(ElementRef<HTMLElement>);

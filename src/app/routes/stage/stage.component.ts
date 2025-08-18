@@ -1,13 +1,4 @@
-import {
-  Component,
-  effect,
-  signal,
-  inject,
-  OnInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, effect, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -80,7 +71,7 @@ export class StageComponent implements OnInit {
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
 
-  constructor(public md: MarkdownService) {
+  constructor() {
     this.finishOAuthIfNeeded();
 
     // Auto-scroll to bottom when messages change
@@ -130,8 +121,6 @@ export class StageComponent implements OnInit {
 
     // Extract character name and role from system prompt
     if (systemMessage) {
-      const content = systemMessage.content.toLowerCase();
-
       // Look for character names (common patterns)
       const namePatterns = [
         /you are ([^.,\n]+)/i,
