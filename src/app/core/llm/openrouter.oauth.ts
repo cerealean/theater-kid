@@ -3,7 +3,17 @@ export async function startOpenRouterPKCE(callbackUrl: string) {
   const hexArray = Array.from(randomBytes, byte => ('0' + byte.toString(16)).slice(-2));
   const codeVerifier = hexArray.join('');
   const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
-  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hash))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  // Convert the hash to a Uint8Array
+  const hashArray = new Uint8Array(hash);
+  // Convert the byte array to a binary string
+  const hashString = String.fromCharCode(...hashArray);
+  // Base64 encode the binary string
+  const base64 = btoa(hashString);
+  // Convert base64 to base64url by replacing characters and removing padding
+  // - Replace '+' with '-'
+  // - Replace '/' with '_'
+  // - Remove trailing '='
+  const codeChallenge = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   sessionStorage.setItem('or_code_verifier', codeVerifier);
   const url = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
   location.href = url;
