@@ -37,6 +37,52 @@ For a complete list of available schematics (such as `components`, `directives`,
 ng generate --help
 ```
 
+## Code Quality & Formatting
+
+This project uses [Prettier](https://prettier.io/) for code formatting and [ESLint](https://eslint.org/) with [Angular ESLint](https://github.com/angular-eslint/angular-eslint) for code quality.
+
+### Linting
+
+To check for code quality issues:
+
+```bash
+npm run lint
+```
+
+To automatically fix linting issues where possible:
+
+```bash
+npm run lint:fix
+```
+
+### Code Formatting
+
+To format all source files:
+
+```bash
+npm run format
+```
+
+To check if files are properly formatted:
+
+```bash
+npm run format:check
+```
+
+### CI/CD Pipeline
+
+Run all quality checks, build, and tests (as used in CI):
+
+```bash
+npm run ci
+```
+
+This command runs:
+1. ESLint for code quality
+2. Prettier format check
+3. Build verification
+4. Unit tests
+
 ## Building
 
 To build the project run:
@@ -64,6 +110,18 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Continuous Integration
+
+This project includes a GitHub Actions workflow that automatically runs on every push and pull request. The CI pipeline:
+
+1. ✅ Checks code formatting with Prettier
+2. ✅ Runs ESLint for code quality
+3. ✅ Builds the application
+4. ✅ Runs unit tests
+5. ✅ Uploads build artifacts
+
+Pull requests must pass all CI checks before they can be merged.
 
 ## Additional Resources
 

@@ -11,7 +11,7 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
-    "ci": "npm run lint && npm run format:check && npm run build && npm run test"
+    "ci": "npm run lint && npm run format:check && npm run build && npm test -- --watch=false --browsers=ChromeHeadless"
   },
   "prettier": {
     "printWidth": 100,
