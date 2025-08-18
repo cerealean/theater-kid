@@ -1,4 +1,4 @@
-import { Component, effect, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -12,11 +12,11 @@ import { ConfigService } from '../../core/services/config.service';
 
 @Component({
   standalone: true,
-  selector: 'tk-stage',
+  selector: 'app-stage',
   imports: [CommonModule, FormsModule],
   templateUrl: './stage.component.html',
 })
-export class StageComponent implements OnInit {
+export class StageComponent {
   private config = inject(ConfigService);
   private route = inject(ActivatedRoute);
 
@@ -58,21 +58,19 @@ export class StageComponent implements OnInit {
     this.provider.set(value);
   }
 
+  public md = inject(MarkdownService);
+
   private abort?: AbortController;
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
 
-  constructor(public md: MarkdownService) {
+  constructor() {
     this.finishOAuthIfNeeded();
 
     // Watch for route parameter changes
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.sceneId.set(params.get('sceneId'));
     });
-  }
-
-  ngOnInit(): void {
-    // Component initialization if needed
   }
 
   async finishOAuthIfNeeded() {

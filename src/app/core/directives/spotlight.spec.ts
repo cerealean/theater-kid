@@ -1,9 +1,9 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Spotlight } from './spotlight';
 
 @Component({
-  template: '<div tkSpotlight></div>',
+  template: '<div appSpotlight></div>',
   standalone: true,
   imports: [Spotlight],
 })
@@ -41,7 +41,9 @@ describe('Spotlight', () => {
       bottom: 320,
       x: 10,
       y: 20,
-      toJSON: () => {},
+      toJSON() {
+        return {};
+      },
     });
 
     divElement.dispatchEvent(mockEvent);

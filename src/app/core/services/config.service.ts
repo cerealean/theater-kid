@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 export type Provider = 'openrouter' | 'openai';
 export type Theme = 'dark' | 'light';

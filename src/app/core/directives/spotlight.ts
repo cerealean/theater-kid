@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 
 /**
  * Spotlight directive that creates a spotlight effect following the mouse cursor.
@@ -11,10 +11,10 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
  */
 @Directive({
   standalone: true,
-  selector: '[tkSpotlight]',
+  selector: '[appSpotlight]',
 })
 export class Spotlight {
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  private elementRef = inject(ElementRef<HTMLElement>);
 
   /**
    * Handles pointer move events to update spotlight position

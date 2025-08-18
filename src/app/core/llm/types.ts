@@ -1,4 +1,7 @@
-export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+export interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
 export interface CreateChatParams {
   model: string;
   messages: ChatMessage[];
