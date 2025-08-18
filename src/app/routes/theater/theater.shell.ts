@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, DOCUMENT, Inject, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,11 +9,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './theater.shell.html',
 })
 export class TheaterShell {
-  theme = signal<'dark'|'light'>((localStorage.getItem('tk:theme') as any) || 'dark');
-  constructor() { document.documentElement.setAttribute('data-theme', this.theme()); }
+  theme = signal<'dark' | 'light'>((localStorage.getItem('tk:theme') as any) || 'dark');
+
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.document.documentElement.setAttribute('data-theme', this.theme());
+  }
+
   toggleTheme() {
     this.theme.update(t => t === 'dark' ? 'light' : 'dark');
-    document.documentElement.setAttribute('data-theme', this.theme());
+    this.document.documentElement.setAttribute('data-theme', this.theme());
     localStorage.setItem('tk:theme', this.theme());
   }
 }
