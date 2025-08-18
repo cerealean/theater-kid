@@ -1,0 +1,30 @@
+<div class="min-h-[calc(100vh-56px)] grid grid-rows-[auto_1fr_auto]">
+  <div class="container max-w-screen-md mx-auto p-4 space-y-3">
+    @for(m of messages(); track m.content) {
+    <div class="flex">
+      <div class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10" [ngClass]="{
+                'ml-auto': m.role === 'user',
+                'bg-white/5': m.role !== 'assistant',
+                'bg-purple-500/10': m.role === 'assistant'
+              }">
+        @if (m.role === 'system') {
+          <div class="text-xs opacity-70 mb-1">System</div>
+        }
+        <div class="prose prose-invert max-w-none" [innerHTML]="md.render(m.content)"></div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="max-w-screen-md mx-auto p-4">
+      <textarea class="tk-input w-full p-3" rows="4" placeholder="Type and hit Send… (Shift+Enter newline)"
+        [(ngModel)]="inputValue" (keydown.enter)="onEnterKey($any($event))"></textarea>
+      <div class="mt-2 flex items-center justify-end gap-2">
+        <input class="tk-input px-3 py-2 w-full" placeholder="(optional) System prompt for this scene"
+          [(ngModel)]="systemValue" />
+        <button class="tk-btn" (click)="send()" [disabled]="busy()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

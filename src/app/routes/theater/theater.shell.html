@@ -1,0 +1,16 @@
+<div class="min-h-screen grid grid-rows-[auto_1fr]">
+  <header class="sticky top-0 z-10 backdrop-blur bg-black/30 border-b border-white/10">
+    <nav class="max-w-screen-xl mx-auto px-4 py-3 flex items-center gap-3">
+      <a routerLink="/stage" class="font-semibold tracking-wide">🎭 Theater Kid</a>
+      <a routerLink="/stage" class="tk-btn">Stage</a>
+      <a routerLink="/backstage" class="tk-btn">Backstage</a>
+      <button class="tk-btn ml-auto" (click)="toggleTheme()">
+        <span>{{ theme() === 'dark' ? '🌙' : '☀️' }}</span> Theme
+      </button>
+    </nav>
+  </header>
+  <main class="tk-stage overflow-auto" tkSpotlight>
+    <div class="tk-theater-spotlight"></div>
+    <router-outlet />
+  </main>
+</div>
