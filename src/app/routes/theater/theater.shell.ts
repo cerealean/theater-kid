@@ -14,7 +14,7 @@ export class TheaterShell {
   private config = inject(ConfigService);
   private document = inject(DOCUMENT);
 
-  theme = signal<'dark' | 'light'>(this.config.getTheme());
+  theme = signal<'dark' | 'light'>(this.config.theme());
   isSideMenuOpen = signal<boolean>(false);
 
   constructor() {
@@ -24,7 +24,7 @@ export class TheaterShell {
   toggleTheme() {
     const newTheme = this.theme() === 'dark' ? 'light' : 'dark';
     this.theme.set(newTheme);
-    this.config.setTheme(newTheme);
+    this.config.theme.set(newTheme);
     this.document.documentElement.setAttribute('data-theme', newTheme);
   }
 

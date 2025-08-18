@@ -20,9 +20,9 @@ export class StageComponent implements OnInit {
   private config = inject(ConfigService);
   private route = inject(ActivatedRoute);
 
-  provider = signal<'openrouter' | 'openai'>(this.config.getProvider());
-  model = signal<string>(this.config.getModel());
-  system = signal<string>(this.config.getSystem());
+  provider = signal<'openrouter' | 'openai'>(this.config.provider());
+  model = signal<string>(this.config.model());
+  system = signal<string>(this.config.system());
   input = signal<string>('');
   messages = signal<ChatMessage[]>([]);
   streaming = signal<boolean>(true);
