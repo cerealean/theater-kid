@@ -83,3 +83,28 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Development Workflow
+
+This project uses **Commitlint** and **Husky** to ensure clean commits and maintain code quality.
+
+### Making Commits
+
+Use standard git commit commands with conventional commit message format:
+
+```bash
+git commit -m "feat: add new feature"
+```
+
+All commit messages are automatically validated against conventional commit standards.
+
+### Pre-commit Hooks
+
+The following checks run automatically:
+
+- **Pre-commit**: Prettier formatting on all staged files
+- **Commit-msg**: Conventional commit message validation
+
+### Available Scripts
+
+- `npm run prepare` - Install husky hooks (runs automatically after npm install)
