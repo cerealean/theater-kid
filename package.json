@@ -13,6 +13,7 @@
     "format": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
     "ci": "npm run lint && npm run format:check && npm run build && npm test -- --watch=false --browsers=ChromeHeadless",
+    "release": "semantic-release",
     "prepare": "husky"
   },
   "prettier": {
@@ -56,6 +57,8 @@
     "@angular/compiler-cli": "^20.1.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@types/jasmine": "~5.1.0",
@@ -73,6 +76,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
+    "semantic-release": "^24.2.7",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.2",
     "typescript-eslint": "8.34.1"
