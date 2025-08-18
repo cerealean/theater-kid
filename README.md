@@ -129,13 +129,27 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 ## Continuous Integration
 
-This project includes a GitHub Actions workflow that automatically runs on every push and pull request. The CI pipeline:
+This project uses separate GitHub Actions workflows for pull requests and releases:
+
+### CI Workflow (Pull Requests and Main Branch)
+
+The CI workflow runs on every push and pull request and includes:
 
 1. ✅ Checks code formatting with Prettier
 2. ✅ Runs ESLint for code quality
 3. ✅ Builds the application
 4. ✅ Runs unit tests
 5. ✅ Uploads build artifacts
+
+### Release Workflow (Main Branch Only)
+
+When code is pushed to the main branch and CI passes, a separate release workflow runs:
+
+1. ✅ Performs semantic versioning analysis
+2. ✅ Updates CHANGELOG.md and package.json
+3. ✅ Creates GitHub releases
+4. ✅ Rebuilds the application with updated version
+5. ✅ Uploads release build artifacts
 
 Pull requests must pass all CI checks before they can be merged.
 
