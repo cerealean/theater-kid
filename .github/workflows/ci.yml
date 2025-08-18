@@ -37,7 +37,7 @@ jobs:
         run: npm run lint
 
       - name: Build application
-        run: npm run build -c production
+        run: npm run build:prod
 
       - name: Run unit tests
         run: npm test
