@@ -7,18 +7,14 @@ import { ConfigService } from '../../core/services/config.service';
 @Component({
   standalone: true,
   selector: 'tk-theater',
-  imports: [
-    RouterLink, 
-    RouterOutlet, 
-    CommonModule,
-    Spotlight
-  ],
+  imports: [RouterLink, RouterOutlet, CommonModule, Spotlight],
   templateUrl: './theater.shell.html',
 })
 export class TheaterShell {
   private config = inject(ConfigService);
-  
+
   theme = signal<'dark' | 'light'>(this.config.getTheme());
+  isSideMenuOpen = signal<boolean>(false);
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.document.documentElement.setAttribute('data-theme', this.theme());
@@ -29,5 +25,13 @@ export class TheaterShell {
     this.theme.set(newTheme);
     this.config.setTheme(newTheme);
     this.document.documentElement.setAttribute('data-theme', newTheme);
+  }
+
+  toggleSideMenu() {
+    this.isSideMenuOpen.set(!this.isSideMenuOpen());
+  }
+
+  closeSideMenu() {
+    this.isSideMenuOpen.set(false);
   }
 }
