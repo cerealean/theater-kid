@@ -5,7 +5,7 @@
       <div class="max-w-[80ch] w-fit px-4 py-3 rounded-2xl shadow-md border border-white/10" [ngClass]="{
                 'ml-auto': m.role === 'user',
                 'bg-white/5': m.role !== 'assistant',
-                'bg-primary/10': m.role === 'assistant'
+                'bg-purple-500/10': m.role === 'assistant'
               }">
         @if (m.role === 'system') {
           <div class="text-xs opacity-70 mb-1">System</div>
