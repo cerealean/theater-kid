@@ -48,6 +48,7 @@ jobs:
         if: success() && github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: 0
         run: npx semantic-release
 
       - name: Rebuild after version update
