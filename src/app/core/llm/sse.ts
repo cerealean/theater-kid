@@ -11,10 +11,13 @@ export async function readSSE(resp: Response, onDelta: (text: string) => void, d
     while ((idx = buffer.indexOf('\n\n')) !== -1) {
       const chunk = buffer.slice(0, idx);
       buffer = buffer.slice(idx + 2);
-      const line = chunk.split('\n').find(l => l.startsWith('data: '));
+      const line = chunk.split('\n').find((l) => l.startsWith('data: '));
       if (!line) continue;
       const data = line.slice(6).trim();
-      if (data === '[DONE]') { done?.(); return; }
+      if (data === '[DONE]') {
+        done?.();
+        return;
+      }
       try {
         const json = JSON.parse(data);
         const delta = json.choices?.[0]?.delta?.content ?? '';

@@ -7,4 +7,4 @@ import { TheaterShell } from './app/routes/theater/theater.shell';
 
 bootstrapApplication(TheaterShell, {
   providers: [provideRouter(routes), provideAnimations(), provideHttpClient(withFetch())],
-}).catch(err => console.error(err));
+}).catch((err) => console.error(err));

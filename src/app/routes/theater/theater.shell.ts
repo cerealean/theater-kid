@@ -16,7 +16,7 @@ export class TheaterShell {
   }
 
   toggleTheme() {
-    this.theme.update(t => t === 'dark' ? 'light' : 'dark');
+    this.theme.update((t) => (t === 'dark' ? 'light' : 'dark'));
     this.document.documentElement.setAttribute('data-theme', this.theme());
     localStorage.setItem('tk:theme', this.theme());
   }
