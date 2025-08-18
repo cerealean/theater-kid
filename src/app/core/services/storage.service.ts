@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-type CanBeStored = string | number | boolean | object | undefined | null;
+type CanBeStored = string | number | boolean | object | [] | undefined | null;
 
 @Injectable({
   providedIn: 'root',
