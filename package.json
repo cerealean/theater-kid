@@ -13,7 +13,7 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
-    "ci": "npm run lint && npm run format:check && npm run build && npm test -- --watch=false --browsers=ChromeHeadless",
+    "ci": "npm run lint && npm run format:check && npm run build && npm test",
     "release": "semantic-release",
     "prepare": "husky",
     "snapshots": "npm run build && playwright test --config=playwright.config.ts"
