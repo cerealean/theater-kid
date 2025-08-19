@@ -36,6 +36,9 @@ export class StageComponent implements OnInit {
   characterTraits = signal<string[]>([]);
   performanceNotes = signal<string>('');
 
+  // Mobile booth overlay state
+  mobileBoothVisible = signal<boolean>(false);
+
   // Getters and setters for ngModel
   get inputValue() {
     return this.input();
@@ -259,6 +262,10 @@ export class StageComponent implements OnInit {
     this.sceneContext.set('');
     this.characterTraits.set([]);
     this.performanceNotes.set('');
+  }
+
+  toggleMobileBooth(): void {
+    this.mobileBoothVisible.set(!this.mobileBoothVisible());
   }
 
   async finishOAuthIfNeeded() {

@@ -49,6 +49,14 @@
             placeholder="(optional) System prompt for this scene"
             [(ngModel)]="systemValue"
           />
+          <!-- Mobile booth toggle button - only visible on mobile -->
+          <button
+            class="tk-btn px-3 py-2 lg:hidden flex items-center gap-1"
+            (click)="toggleMobileBooth()"
+            title="Open Character Booth"
+          >
+            🎭
+          </button>
           <button class="tk-btn px-4 py-2 font-medium" (click)="send()" [disabled]="busy()">
             {{ busy() ? 'Sending...' : 'Send' }}
           </button>
@@ -58,8 +66,9 @@
   </div>
 
   <!-- Theater Booth - Character Information Staging Area -->
+  <!-- Desktop/Tablet view - always visible -->
   <div
-    class="w-full lg:w-80 flex-shrink-0 tk-theater-booth tk-booth-border tk-booth-glow border-t lg:border-t-0 lg:border-l border-amber-400/30 relative overflow-hidden"
+    class="hidden lg:flex w-80 flex-shrink-0 tk-theater-booth tk-booth-border tk-booth-glow border-l border-amber-400/30 relative overflow-hidden flex-col"
   >
     <!-- Velvet curtain effect -->
     <div
@@ -177,4 +186,158 @@
       class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl"
     ></div>
   </div>
+
+  <!-- Mobile Booth Overlay -->
+  @if (mobileBoothVisible()) {
+    <div
+      class="lg:hidden fixed inset-0 z-[9999] mt-16 bg-black/80 backdrop-blur-sm"
+      tabindex="0"
+      (click)="toggleMobileBooth()"
+      (keydown.escape)="toggleMobileBooth()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booth-title"
+    >
+      <!-- Floating close button positioned outside booth content -->
+      <button
+        class="absolute top-4 right-4 z-[10000] w-10 h-10 hover:bg-white/10 border border-white/30 text-white text-xl font-bold rounded-full shadow-lg flex items-center justify-center backdrop-blur-sm"
+        (click)="$event.stopPropagation(); toggleMobileBooth()"
+        title="Close booth"
+        aria-label="Close booth"
+      >
+        ✕
+      </button>
+
+      <!-- Full overlay booth content -->
+      <div
+        class="h-full flex flex-col tk-theater-booth tk-booth-border tk-booth-glow relative overflow-hidden"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+        tabindex="0"
+        role="main"
+      >
+        <!-- Velvet curtain effect -->
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-red-800/30 via-purple-800/20 to-red-800/30 opacity-60"
+        ></div>
+
+        <!-- Ornate border pattern -->
+        <div class="absolute inset-0 border-2 border-amber-400/20 border-opacity-40"></div>
+        <div class="absolute top-2 left-2 right-2 bottom-2 border border-amber-300/10"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 p-6 h-full flex flex-col">
+          <!-- Booth header -->
+          <div class="text-center mb-4" id="booth-title">
+            <div class="text-amber-300 text-lg font-serif mb-2">🎭 Private Booth</div>
+            <div
+              class="h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"
+            ></div>
+          </div>
+
+          <!-- Character spotlight -->
+          <div class="bg-black/30 rounded-lg p-4 mb-4 border border-amber-400/20">
+            <div class="text-center">
+              <div
+                class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 flex items-center justify-center text-2xl"
+              >
+                🎪
+              </div>
+              <div class="text-white/90 font-medium">
+                {{ currentCharacter() || 'No Character Selected' }}
+              </div>
+              <div class="text-white/60 text-sm mt-1">
+                {{ characterRole() || 'Awaiting performance...' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Character details -->
+          <div class="flex-1 space-y-4 overflow-y-auto">
+            <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+              <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">
+                Scene Context
+              </div>
+              <div class="text-white/70 text-sm">
+                {{ sceneContext() || 'The stage awaits your direction...' }}
+              </div>
+            </div>
+
+            <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+              <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">
+                Character Traits
+              </div>
+              <div class="text-white/70 text-sm space-y-1">
+                @for (trait of characterTraits(); track trait) {
+                  <div class="flex items-center gap-2">
+                    <div class="w-1 h-1 rounded-full bg-amber-400/60"></div>
+                    <span>{{ trait }}</span>
+                  </div>
+                }
+                @if (characterTraits().length === 0) {
+                  <div class="text-white/50 italic">Personality emerging...</div>
+                }
+              </div>
+            </div>
+
+            <div class="bg-black/20 rounded-lg p-3 border border-white/10">
+              <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">
+                Performance Notes
+              </div>
+              <div class="text-white/70 text-sm">
+                {{ performanceNotes() || 'Ready for improvisation' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Theater ambiance controls -->
+          <div class="mt-4 pt-4 border-t border-amber-400/20 flex-shrink-0">
+            <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-2">Ambiance</div>
+            <div class="flex gap-2 text-lg mb-3 justify-center">
+              <button
+                class="hover:scale-110 transition-transform hover:text-yellow-300"
+                title="Spotlight"
+                (click)="toggleSpotlight()"
+              >
+                🔦
+              </button>
+              <button
+                class="hover:scale-110 transition-transform hover:text-red-300"
+                title="Curtains"
+                (click)="toggleCurtains()"
+              >
+                🎭
+              </button>
+              <button
+                class="hover:scale-110 transition-transform hover:text-blue-300"
+                title="Music"
+                (click)="toggleMusic()"
+              >
+                🎵
+              </button>
+              <button
+                class="hover:scale-110 transition-transform hover:text-green-300"
+                title="Applause"
+                (click)="triggerApplause()"
+              >
+                👏
+              </button>
+            </div>
+            <button
+              class="w-full text-xs py-2 px-3 rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white/90 transition-colors mb-3"
+              title="Reset Character Information"
+              (click)="resetCharacter()"
+            >
+              Reset Booth
+            </button>
+          </div>
+        </div>
+
+        <!-- Subtle spotlight effect -->
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl"
+        ></div>
+      </div>
+    </div>
+  }
 </div>
