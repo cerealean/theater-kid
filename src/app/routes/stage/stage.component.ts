@@ -355,7 +355,6 @@ export class StageComponent implements OnInit {
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         this.messages.update((m) => [...m, this.createMessage('system', '❌ ' + errorMessage)]);
-        // this.messages.update((m) => [...m, { role: 'system', content: '❌ ' + errorMessage }]);
       } finally {
         this.busy.set(false);
       }
