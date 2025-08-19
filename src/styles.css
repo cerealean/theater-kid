@@ -345,5 +345,5 @@ body {
 .tk-content > * .msg,
 .tk-content .rounded-bubble {
   backdrop-filter: blur(2px);
-  background-color: rgba(255, 255, 255, 0.06); /* fallback if color-mix() not supported */
+  background-color: rgba(255, 255, 255, 0.06);
 }
