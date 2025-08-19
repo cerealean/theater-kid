@@ -2,6 +2,9 @@ import { test } from '@playwright/test';
 import { mkdirSync } from 'fs';
 mkdirSync('screenshots', { recursive: true });
 
+test.beforeAll(() => {
+  mkdirSync('screenshots', { recursive: true });
+});
 test('stage screenshot', async ({ page }) => {
   await page.goto('/'); // your router should redirect to /stage
   await page.waitForLoadState('networkidle');
