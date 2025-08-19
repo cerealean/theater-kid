@@ -1,11 +1,12 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 
 @Directive({
   selector: '[tkSpotlight]',
   standalone: true,
 })
 export class SpotlightDirective {
-  constructor(private el: ElementRef<HTMLElement>) {}
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
+
   @HostListener('pointermove', ['$event'])
   onMove(e: PointerEvent) {
     const r = this.el.nativeElement.getBoundingClientRect();
