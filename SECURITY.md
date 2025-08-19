@@ -26,9 +26,8 @@ If you discover a security vulnerability in Theater Kid, please help us maintain
 
 ### What to Expect
 
-- We will acknowledge your report within 48 hours
-- We will investigate and provide an initial assessment within 5 business days
-- We will keep you informed of our progress toward resolving the issue
+- We will acknowledge your report when possible
+- We will investigate the reported vulnerability
 - Once the vulnerability is resolved, we will coordinate disclosure and recognition
 
 ## Security Features
