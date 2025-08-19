@@ -13,9 +13,10 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
-    "ci": "npm run lint && npm run format:check && npm run build && npm test -- --watch=false --browsers=ChromeHeadless",
+    "ci": "npm run lint && npm run format:check && npm run build && npm test",
     "release": "semantic-release",
-    "prepare": "husky"
+    "prepare": "husky",
+    "snapshots": "npm run build && playwright test --config=playwright.config.ts"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +33,7 @@
     "motion": "^12.23.12",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "uuid": "^11.1.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
@@ -40,6 +42,7 @@
     "@angular/compiler-cli": "^20.1.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@playwright/test": "^1.54.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@tailwindcss/forms": "^0.5.10",
@@ -50,6 +53,7 @@
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
