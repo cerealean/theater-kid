@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Theater Kid! This guide will help
 
 ### Prerequisites
 
-- **Node.js LTS (v20+)**: Latest stable Node.js runtime
+- **Node.js LTS**: Latest stable Node.js runtime
 - **npm**: Package manager (comes with Node.js)
 - **Git**: Version control system
 
