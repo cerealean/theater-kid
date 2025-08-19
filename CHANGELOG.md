@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/cerealean/theater-kid/compare/v1.1.0...v1.2.0) (2025-08-19)
+
+
+### Features
+
+* **ui:** CSS Proscenium Stage + Spotlight ([d702809](https://github.com/cerealean/theater-kid/commit/d702809ae948def2ab2ece24a235ba7cbdadb385))
+
 # [1.1.0](https://github.com/cerealean/theater-kid/compare/v1.0.0...v1.1.0) (2025-08-18)
 
 
