@@ -181,3 +181,11 @@ The following checks run automatically:
 ### Available Scripts
 
 - `npm run prepare` - Install husky hooks (runs automatically after npm install)
+
+## AI Assistant Instructions
+
+For AI assistants and GitHub Copilot working on this project, comprehensive instructions are available at:
+
+- **[GitHub Copilot Instructions](.github/copilot-instructions.md)** - Complete guide for AI assistants
+
+These instructions cover commit practices, testing requirements, project architecture, and Theater Kid-specific patterns to ensure consistent, high-quality contributions.
