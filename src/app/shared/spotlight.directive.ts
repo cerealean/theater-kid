@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  HostListener,
-  inject,
-  OnDestroy,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, OnDestroy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, throttleTime } from 'rxjs';
 
