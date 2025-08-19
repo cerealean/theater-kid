@@ -184,12 +184,8 @@ The following checks run automatically:
 
 ## AI Assistant Instructions
 
-For AI assistants and Copilot working on this project, comprehensive instructions are available:
+For AI assistants and GitHub Copilot working on this project, comprehensive instructions are available at:
 
-- **[Main AI Instructions](.copilot-instructions.md)** - Complete guide for AI assistants
-- **[Core Module Instructions](src/app/core/INSTRUCTIONS.md)** - Guidelines for core services and providers
-- **[Routes Instructions](src/app/routes/INSTRUCTIONS.md)** - UI component and route development
-- **[Testing Instructions](tests/INSTRUCTIONS.md)** - Testing patterns and best practices
-- **[Documentation Instructions](docs/INSTRUCTIONS.md)** - Documentation standards and maintenance
+- **[GitHub Copilot Instructions](.github/copilot-instructions.md)** - Complete guide for AI assistants
 
-These instructions cover commit practices, testing requirements, project architecture, and Theater Kid-specific patterns.
+These instructions cover commit practices, testing requirements, project architecture, and Theater Kid-specific patterns to ensure consistent, high-quality contributions.
