@@ -39,7 +39,7 @@ For cloud-based development, use GitHub Codespaces:
 
 1. Click "Code" → "Codespaces" → "Create codespace on main"
 2. Dependencies are automatically installed
-3. See [.devcontainer/README.md](.devcontainer/README.md) for details
+3. The Codespaces environment is pre-configured for development—no additional setup is required.
 
 ## 🛠️ Development Workflow
 
