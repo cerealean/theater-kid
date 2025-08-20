@@ -1,5 +1,5 @@
 <!-- Theater Booth - Character Information Staging Area -->
-<section class="wrapper" aria-label="Section for character information">
+<section id="tk-booth-wrapper" aria-label="Section for character information">
   <!-- Velvet curtain effect -->
   <div class="velvet-curtain" aria-hidden="true"></div>
 
@@ -11,7 +11,7 @@
   <div id="tk-booth-content">
     <!-- Booth header -->
     <div class="text-center mb-6">
-      <div class="tk-booth-header">🎭 Character Booth</div>
+      <div class="tk-booth-header" role="heading" aria-level="1">🎭 Character Booth</div>
       <div class="tk-horizontal-booth-divider" aria-hidden="true"></div>
     </div>
 
@@ -37,18 +37,22 @@
     <!-- Character details -->
     <div id="tk-booth-character-details-wrapper">
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header">Scene Context</div>
+        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
+          Scene Context
+        </div>
         <div class="tk-booth-character-details-section-content">
           {{ sceneContext() || 'The stage awaits your direction...' }}
         </div>
       </div>
 
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header">Character Traits</div>
+        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
+          Character Traits
+        </div>
         <div class="tk-booth-character-details-section-content space-y-1">
           @for (trait of characterTraits(); track trait) {
-            <div class="flex items-center gap-2">
-              <div class="w-1 h-1 rounded-full bg-amber-400/60"></div>
+            <div class="flex items-center gap-2" role="listitem">
+              <div class="w-1 h-1 rounded-full bg-amber-400/60" aria-hidden="true"></div>
               <span>{{ trait }}</span>
             </div>
           }
@@ -59,7 +63,9 @@
       </div>
 
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header">Performance Notes</div>
+        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
+          Performance Notes
+        </div>
         <div class="tk-booth-character-details-section-content">
           {{ performanceNotes() || 'Ready for improvisation' }}
         </div>

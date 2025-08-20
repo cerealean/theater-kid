@@ -59,7 +59,7 @@
     0 0 30px rgba(139, 69, 19, 0.2);
 }
 
-.wrapper {
+#tk-booth-wrapper {
   @apply w-full lg:w-80 flex-shrink-0 tk-theater-booth tk-booth-border tk-booth-glow border-t lg:border-t-0 lg:border-l border-amber-400/30 relative overflow-hidden;
 }
 .velvet-curtain {
