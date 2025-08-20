@@ -10,6 +10,12 @@ export class CharacterService {
 
   public readonly currentCharacter = computed(() => this.characters.get(this._currentCharacter()));
 
+  public setCurrentCharacter(name: string): void {
+    if (this.characters.has(name)) {
+      this._currentCharacter.set(name);
+    }
+  }
+
   public getCharacter(name: string): CharacterBoothModel | undefined {
     return this.characters.get(name);
   }
