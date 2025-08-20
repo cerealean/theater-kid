@@ -1,5 +1,18 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker/locale/en';
 import { LLMProvider, ProviderInfo, CreateChatParams } from './types';
+
+// Default configuration constants
+const DEFAULT_MIN_SENTENCES = 1;
+const DEFAULT_MAX_SENTENCES = 3;
+const DEFAULT_MIN_TOKENS_PER_CHUNK = 1;
+const DEFAULT_MAX_TOKENS_PER_CHUNK = 5;
+const DEFAULT_AVG_DELAY_MS = 40;
+const DEFAULT_JITTER_MS = 40;
+
+// Tokenization constants for paragraph cadence simulation
+const NEWLINE_INJECTION_LOOKBACK = 6; // How many chunks back to look for newline injection
+const MIN_NEWLINE_SPACING = 8; // Minimum spacing between newlines
+const MAX_NEWLINE_SPACING = 16; // Maximum spacing between newlines
 
 export interface FakeProviderConfig {
   avgDelayMs?: number; // average delay between chunks
@@ -32,8 +45,8 @@ export class FakeStreamingProvider implements LLMProvider {
     abortSignal,
   }: CreateChatParams): Promise<{ text: string } | void> {
     const sentencesCount = this.randBetween(
-      this.cfg.sentences?.[0] ?? 1,
-      this.cfg.sentences?.[1] ?? 3,
+      this.cfg.sentences?.[0] ?? DEFAULT_MIN_SENTENCES,
+      this.cfg.sentences?.[1] ?? DEFAULT_MAX_SENTENCES,
     );
     const text = faker.lorem.sentences(sentencesCount);
 
@@ -49,10 +62,14 @@ export class FakeStreamingProvider implements LLMProvider {
     onToken: (chunk: string) => void,
     abortSignal?: AbortSignal,
   ): Promise<void> {
-    const chunks = this.tokenize(text, this.cfg.tokensPerChunk ?? [1, 5]);
+    const chunks = this.tokenize(
+      text,
+      this.cfg.tokensPerChunk ?? [DEFAULT_MIN_TOKENS_PER_CHUNK, DEFAULT_MAX_TOKENS_PER_CHUNK],
+    );
 
     // Initial thinking delay
-    const initialDelay = this.cfg.initialThinkingMs ?? (this.cfg.avgDelayMs ?? 40) * 2;
+    const initialDelay =
+      this.cfg.initialThinkingMs ?? (this.cfg.avgDelayMs ?? DEFAULT_AVG_DELAY_MS) * 2;
     await this.delay(initialDelay);
 
     if (abortSignal?.aborted) return;
@@ -64,8 +81,8 @@ export class FakeStreamingProvider implements LLMProvider {
 
       // Don't delay after the last chunk
       if (i < chunks.length - 1) {
-        const avg = this.cfg.avgDelayMs ?? 40;
-        const jitter = this.cfg.jitterMs ?? 40;
+        const avg = this.cfg.avgDelayMs ?? DEFAULT_AVG_DELAY_MS;
+        const jitter = this.cfg.jitterMs ?? DEFAULT_JITTER_MS;
         const delayMs = Math.max(0, avg + (Math.random() * jitter * 2 - jitter));
         await this.delay(delayMs);
       }
@@ -82,7 +99,11 @@ export class FakeStreamingProvider implements LLMProvider {
     }
 
     // Occasionally inject a newline to mimic paragraph cadence
-    for (let j = out.length - 6; j > 0; j -= this.randBetween(8, 16)) {
+    for (
+      let j = out.length - NEWLINE_INJECTION_LOOKBACK;
+      j > 0;
+      j -= this.randBetween(MIN_NEWLINE_SPACING, MAX_NEWLINE_SPACING)
+    ) {
       if (j >= 0 && j < out.length) {
         out[j] += '\n';
       }

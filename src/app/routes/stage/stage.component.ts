@@ -16,6 +16,15 @@ import { StageInputComponent } from './stage-input/stage-input.component';
 import { TheaterBoothComponent } from './theater-booth/theater-booth.component';
 import { EmptyMessagesDisplay } from './empty-messages-display/empty-messages-display';
 
+// Configuration constants for the fake streaming provider
+const FAKE_PROVIDER_CONFIG = {
+  avgDelayMs: 45, // Average milliseconds between streaming chunks for realistic typing speed
+  jitterMs: 35, // Random variance (+/-) in delay timing to simulate human-like irregularity
+  sentences: [1, 3] as [number, number], // Range of sentences to generate per response
+  tokensPerChunk: [1, 5] as [number, number], // Characters per streaming chunk (mimics word-by-word typing)
+  initialThinkingMs: 120, // Initial delay before first chunk to simulate "thinking" time
+};
+
 @Component({
   standalone: true,
   selector: 'tk-stage',
@@ -83,13 +92,7 @@ export class StageComponent implements OnInit {
   private abort?: AbortController;
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
-  private fake = new FakeStreamingProvider({
-    avgDelayMs: 45,
-    jitterMs: 35,
-    sentences: [1, 3],
-    tokensPerChunk: [1, 5],
-    initialThinkingMs: 120,
-  });
+  private fake = new FakeStreamingProvider(FAKE_PROVIDER_CONFIG);
 
   constructor() {
     this.finishOAuthIfNeeded();
