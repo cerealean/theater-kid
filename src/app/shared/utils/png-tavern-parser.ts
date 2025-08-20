@@ -16,7 +16,9 @@ function isPngSignature(buf: ArrayBuffer) {
 async function inflateDeflate(data: Uint8Array): Promise<Uint8Array> {
   if ('DecompressionStream' in globalThis) {
     const ds = new DecompressionStream('deflate');
-    const stream = new Response(new Blob([data]).stream().pipeThrough(ds));
+    const stream = new Response(
+      new Blob([data as Uint8Array<ArrayBuffer>]).stream().pipeThrough(ds),
+    );
     return new Uint8Array(await stream.arrayBuffer());
   }
   throw new Error(
@@ -99,10 +101,9 @@ function safeParseJson<T = unknown>(s: string): T | null {
     const obj = JSON.parse(s);
     if (obj && typeof obj === 'object') {
       // shallow sanitize
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const o = obj as UnsafeObject;
-      delete o.__proto__;
-      delete o.constructor;
+      const o = obj as Record<string, unknown>;
+      delete o['__proto__'];
+      delete o['constructor'];
     }
     return obj;
   } catch {
