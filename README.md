@@ -7,6 +7,7 @@ A modern Angular chat application for AI conversations with a theatrical theme.
 - 🎪 **Multiple AI Providers**: Support for OpenAI and OpenRouter
 - 💬 **Real-time Streaming**: Live response streaming from AI models
 - 🎨 **Beautiful UI**: Theater-inspired design with spotlight effects
+- 🎭 **Character Import**: Import Tavern/SillyTavern character cards from PNG/JSON
 - 🌙 **Dark/Light Theme**: Toggle between themes
 - 📱 **Responsive**: Works on all screen sizes
 - 🔒 **Secure**: Proper markdown sanitization and type safety
@@ -51,6 +52,63 @@ For a complete list of available schematics (such as `components`, `directives`,
 ```bash
 ng generate --help
 ```
+
+## Character Import
+
+Theater Kid supports importing character cards from Tavern/SillyTavern in both PNG and JSON formats. The application can parse both V1 and V2 character card specifications and extract character data from PNG text chunks.
+
+### Supported Formats
+
+- **JSON Files**: Direct character card JSON files (V1 and V2 formats)
+- **PNG Files**: Character cards embedded in PNG metadata using text chunks (tEXt/iTXt/zTXt)
+- **PNG Compression**: Supports deflate compression using browser's `DecompressionStream`
+
+### How to Import
+
+1. Navigate to the Theater Booth (private booth panel on the right)
+2. Click the "Upload Character PNG/JSON" button
+3. Select your character file (PNG or JSON)
+4. The character information will be parsed and displayed
+
+### Character Card Formats
+
+#### Tavern V2 Format
+
+```json
+{
+  "spec": "chara_card_v2",
+  "spec_version": "2.0",
+  "data": {
+    "name": "Character Name",
+    "description": "Character description",
+    "personality": "Character personality",
+    "scenario": "Setting or scenario",
+    "first_mes": "Initial message",
+    "mes_example": "Example conversation",
+    "system_prompt": "System instructions",
+    "post_history_instructions": "Post-conversation instructions",
+    "tags": ["tag1", "tag2"],
+    "creator": "Creator name"
+  }
+}
+```
+
+#### PNG Text Chunks
+
+For PNG files, the parser looks for character data in text chunks with these keywords (in order of preference):
+
+1. `chara` - Primary keyword used by most character card tools
+2. Any other text chunk containing valid JSON
+
+The parser supports:
+
+- **tEXt**: Uncompressed text chunks
+- **iTXt**: International text chunks (with optional compression)
+- **zTXt**: Compressed text chunks using deflate
+
+### Browser Requirements
+
+Character import requires a modern browser with `DecompressionStream` support for PNG files with compressed text chunks. Most recent browsers support this feature.
 
 ## Code Quality & Formatting
 

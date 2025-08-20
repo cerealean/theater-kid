@@ -19,6 +19,12 @@
       <div class="h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"></div>
     </div>
 
+    <!-- Character Import Section -->
+    <div class="mb-4">
+      <tk-upload-character-button (loaded)="booth.setActiveCharacter($event)" class="w-full">
+      </tk-upload-character-button>
+    </div>
+
     <!-- Character spotlight -->
     <div class="bg-black/30 rounded-lg p-4 mb-4 border border-amber-400/20">
       <div class="text-center">
@@ -67,6 +73,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Imported Character View -->
+    <tk-character-card-view></tk-character-card-view>
 
     <!-- Theater ambiance controls -->
     <div class="mt-4 pt-4 border-t border-amber-400/20">
