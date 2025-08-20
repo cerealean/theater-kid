@@ -53,7 +53,7 @@ export class UploadCharacterButtonComponent {
       const character = await this.svc.import(file);
       this.loaded.emit(character);
     } catch (e) {
-      this.error.set((e as Error)?.message ?? 'Failed to parse character.');
+      this.error.set((e as Error)?.message ?? 'Unable to parse character file. Please check the file format and try again.');
     } finally {
       this.busy.set(false);
       input.value = '';
