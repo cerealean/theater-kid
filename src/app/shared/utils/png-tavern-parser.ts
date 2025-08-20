@@ -15,11 +15,16 @@ function isPngSignature(buf: ArrayBuffer) {
 
 async function inflateDeflate(data: Uint8Array): Promise<Uint8Array> {
   if ('DecompressionStream' in globalThis) {
-    const ds = new DecompressionStream('deflate');
-    const stream = new Response(
-      new Blob([data as Uint8Array<ArrayBuffer>]).stream().pipeThrough(ds),
-    );
-    return new Uint8Array(await stream.arrayBuffer());
+    try {
+      const ds = new DecompressionStream('deflate');
+      const stream = new Response(new Blob([data as BlobPart]).stream().pipeThrough(ds));
+      return new Uint8Array(await stream.arrayBuffer());
+    } catch (error) {
+      console.warn('DecompressionStream failed, this may be due to browser compatibility:', error);
+      throw new Error(
+        'Failed to decompress PNG text data. This may be due to browser compatibility issues with DecompressionStream.',
+      );
+    }
   }
   throw new Error(
     'Deflate decompression not supported by this browser. Please see https://caniuse.com/mdn-api_decompressionstream_decompressionstream_deflate for browser support.',
@@ -39,6 +44,8 @@ export async function extractPngText(buf: ArrayBuffer): Promise<TextEntry[]> {
   const texts: TextEntry[] = [];
   let offset = 8; // after signature
 
+  console.log('Extracting PNG text chunks from buffer of size:', buf.byteLength);
+
   while (offset + 12 <= u8.length) {
     const length = readU32BE(dv, offset);
     const type = utf8(u8.subarray(offset + 4, offset + 8));
@@ -46,53 +53,71 @@ export async function extractPngText(buf: ArrayBuffer): Promise<TextEntry[]> {
     const dataEnd = dataStart + length;
     if (dataEnd > u8.length) break;
 
+    console.log(`Found PNG chunk: type="${type}", length=${length}`);
+
     const data = u8.subarray(dataStart, dataEnd);
 
-    if (type === 'tEXt') {
-      const nul = data.indexOf(0);
-      if (nul !== -1) {
-        const keyword = utf8(data.subarray(0, nul));
-        const text = utf8(data.subarray(nul + 1));
-        texts.push({ keyword, text });
-      }
-    } else if (type === 'zTXt') {
-      const nul = data.indexOf(0);
-      if (nul !== -1 && data.length > nul + 2) {
-        const keyword = utf8(data.subarray(0, nul));
-        const compMethod = data[nul + 1]; // 0=zlib/deflate
-        const comp = data.subarray(nul + 2);
-        if (compMethod === 0) {
-          const inflated = await inflateDeflate(comp);
+    try {
+      if (type === 'tEXt') {
+        const nul = data.indexOf(0);
+        if (nul !== -1) {
+          const keyword = utf8(data.subarray(0, nul));
+          const text = utf8(data.subarray(nul + 1));
+          console.log(`tEXt chunk: keyword="${keyword}", text length=${text.length}`);
+          texts.push({ keyword, text });
+        }
+      } else if (type === 'zTXt') {
+        const nul = data.indexOf(0);
+        if (nul !== -1 && data.length > nul + 2) {
+          const keyword = utf8(data.subarray(0, nul));
+          const compMethod = data[nul + 1]; // 0=zlib/deflate
+          const comp = data.subarray(nul + 2);
+          console.log(
+            `zTXt chunk: keyword="${keyword}", compression method=${compMethod}, compressed length=${comp.length}`,
+          );
+          if (compMethod === 0) {
+            const inflated = await inflateDeflate(comp);
+            console.log(`zTXt inflated text length: ${utf8(inflated).length}`);
+            texts.push({ keyword, text: utf8(inflated) });
+          }
+        }
+      } else if (type === 'iTXt') {
+        // keyword\0 compFlag(1) compMethod(1) languageTag\0 translatedKeyword\0 text
+        let p = 0;
+        const readStr = () => {
+          const start = p;
+          while (p < data.length && data[p] !== 0) p++;
+          const s = utf8(data.subarray(start, p));
+          p++; // skip NUL
+          return s;
+        };
+        const keyword = readStr();
+        const compFlag = data[p++]; // 0 or 1
+        const compMethod = data[p++];
+        /* language */ readStr();
+        /* translated */ readStr();
+        const remaining = data.subarray(p);
+        console.log(
+          `iTXt chunk: keyword="${keyword}", compressed=${compFlag}, method=${compMethod}, remaining length=${remaining.length}`,
+        );
+        if (compFlag === 1 && compMethod === 0) {
+          const inflated = await inflateDeflate(remaining);
+          console.log(`iTXt inflated text length: ${utf8(inflated).length}`);
           texts.push({ keyword, text: utf8(inflated) });
+        } else {
+          texts.push({ keyword, text: utf8(remaining) });
         }
       }
-    } else if (type === 'iTXt') {
-      // keyword\0 compFlag(1) compMethod(1) languageTag\0 translatedKeyword\0 text
-      let p = 0;
-      const readStr = () => {
-        const start = p;
-        while (p < data.length && data[p] !== 0) p++;
-        const s = utf8(data.subarray(start, p));
-        p++; // skip NUL
-        return s;
-      };
-      const keyword = readStr();
-      const compFlag = data[p++]; // 0 or 1
-      const compMethod = data[p++];
-      /* language */ readStr();
-      /* translated */ readStr();
-      const remaining = data.subarray(p);
-      if (compFlag === 1 && compMethod === 0) {
-        const inflated = await inflateDeflate(remaining);
-        texts.push({ keyword, text: utf8(inflated) });
-      } else {
-        texts.push({ keyword, text: utf8(remaining) });
-      }
+    } catch (error) {
+      console.warn(`Error processing PNG chunk type "${type}":`, error);
+      // Continue processing other chunks even if one fails
     }
 
     offset = dataEnd + 4; // skip CRC
     if (type === 'IEND') break;
   }
+
+  console.log(`Extracted ${texts.length} text entries from PNG`);
   return texts;
 }
 
@@ -158,37 +183,65 @@ function mapToBooth(card: TavernCardV1 | TavernCardV2, avatarUrl: string): Chara
 }
 
 export async function parseCharacterFile(file: File): Promise<CharacterBoothModel> {
+  console.log('Parsing character file:', file.name, 'Type:', file.type, 'Size:', file.size);
   const blobUrl = URL.createObjectURL(file);
 
   // JSON files
   if (file.type === 'application/json' || file.name.toLowerCase().endsWith('.json')) {
-    const txt = await file.text();
-    const j = safeParseJson(txt);
-    if (!j) throw new Error('Invalid JSON format in character file.');
-    if (isV2Card(j) || isV1Card(j)) return mapToBooth(j, blobUrl);
-    throw new Error('File does not contain a valid Tavern character card (V1 or V2 format).');
-  }
-
-  // PNG path
-  const buf = await file.arrayBuffer();
-  const entries = await extractPngText(buf);
-
-  // Prefer keyword 'chara', else first JSON-looking entry
-  const candidateTexts = [
-    ...entries.filter((e) => e.keyword.toLowerCase() === 'chara'),
-    ...entries.filter((e) => e.keyword.toLowerCase() !== 'chara'),
-  ].map((e) => e.text);
-
-  for (const text of candidateTexts) {
-    const j = safeParseJson(text);
-    if (!j) continue;
-    if (isV2Card(j) || isV1Card(j)) return mapToBooth(j, blobUrl);
-    if (j && typeof j === 'object') {
-      for (const v of Object.values(j)) {
-        if (isV2Card(v) || isV1Card(v)) return mapToBooth(v, blobUrl);
-      }
+    try {
+      console.log('Processing as JSON file');
+      const txt = await file.text();
+      const j = safeParseJson(txt);
+      if (!j) throw new Error('Invalid JSON format in character file.');
+      if (isV2Card(j) || isV1Card(j)) return mapToBooth(j, blobUrl);
+      throw new Error('File does not contain a valid Tavern character card (V1 or V2 format).');
+    } catch (error) {
+      console.error('JSON parsing error:', error);
+      throw error;
     }
   }
 
-  throw new Error('No valid Tavern character JSON found in PNG metadata.');
+  // PNG path
+  try {
+    console.log('Processing as PNG file');
+    const buf = await file.arrayBuffer();
+    console.log('File buffer size:', buf.byteLength);
+
+    const entries = await extractPngText(buf);
+    console.log('Found PNG text entries:', entries.length);
+    entries.forEach((entry, i) => {
+      console.log(`Entry ${i}: keyword="${entry.keyword}", text length=${entry.text.length}`);
+    });
+
+    // Prefer keyword 'chara', else first JSON-looking entry
+    const candidateTexts = [
+      ...entries.filter((e) => e.keyword.toLowerCase() === 'chara'),
+      ...entries.filter((e) => e.keyword.toLowerCase() !== 'chara'),
+    ].map((e) => e.text);
+
+    console.log('Candidate texts to parse:', candidateTexts.length);
+
+    for (const text of candidateTexts) {
+      console.log('Trying to parse text of length:', text.length);
+      const j = safeParseJson(text);
+      if (!j) continue;
+      if (isV2Card(j) || isV1Card(j)) {
+        console.log('Successfully parsed character card');
+        return mapToBooth(j, blobUrl);
+      }
+      if (j && typeof j === 'object') {
+        for (const v of Object.values(j)) {
+          if (isV2Card(v) || isV1Card(v)) {
+            console.log('Successfully parsed character card from nested object');
+            return mapToBooth(v, blobUrl);
+          }
+        }
+      }
+    }
+
+    throw new Error('No valid Tavern character JSON found in PNG metadata.');
+  } catch (error) {
+    console.error('PNG parsing error:', error);
+    throw error;
+  }
 }
