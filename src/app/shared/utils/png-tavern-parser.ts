@@ -136,21 +136,55 @@ function safeParseJson<T = unknown>(s: string): T | null {
   }
 }
 
+function isBase64(str: string): boolean {
+  // Check if string looks like base64 (mostly alphanumeric with + / = padding)
+  const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+  return base64Regex.test(str) && str.length % 4 === 0 && str.length > 20;
+}
+
+function safeDecodeBase64(str: string): string | null {
+  try {
+    return atob(str);
+  } catch {
+    return null;
+  }
+}
+
 function isV2Card(x: unknown): x is TavernCardV2 {
-  return (
+  const result =
     !!x &&
     typeof x === 'object' &&
     (x as TavernCardV2).spec === 'chara_card_v2' &&
-    typeof (x as TavernCardV2).data === 'object'
-  );
+    typeof (x as TavernCardV2).data === 'object';
+  if (!result && x && typeof x === 'object') {
+    const obj = x as Record<string, unknown>;
+    console.log('V2 card validation failed:', {
+      hasSpec: 'spec' in obj,
+      specValue: obj['spec'],
+      isCharaCardV2: obj['spec'] === 'chara_card_v2',
+      hasData: 'data' in obj,
+      dataType: typeof obj['data'],
+    });
+  }
+  return result;
 }
 
 function isV1Card(x: unknown): x is TavernCardV1 {
   if (!x || typeof x !== 'object') return false;
   const o = x as TavernCardV1;
-  return ['name', 'description', 'scenario', 'first_mes', 'mes_example'].every(
-    (k) => typeof o[k as keyof TavernCardV1] === 'string',
-  );
+  const requiredFields = ['name', 'description', 'scenario', 'first_mes', 'mes_example'];
+  const fieldCheck = requiredFields.map((k) => ({
+    field: k,
+    exists: k in o,
+    type: typeof o[k as keyof TavernCardV1],
+    isString: typeof o[k as keyof TavernCardV1] === 'string',
+  }));
+  const isValid = requiredFields.every((k) => typeof o[k as keyof TavernCardV1] === 'string');
+
+  if (!isValid) {
+    console.log('V1 card validation failed:', fieldCheck);
+  }
+  return isValid;
 }
 
 function mapToBooth(card: TavernCardV1 | TavernCardV2, avatarUrl: string): CharacterBoothModel {
@@ -223,14 +257,49 @@ export async function parseCharacterFile(file: File): Promise<CharacterBoothMode
 
     for (const text of candidateTexts) {
       console.log('Trying to parse text of length:', text.length);
-      const j = safeParseJson(text);
-      if (!j) continue;
+
+      // First try parsing as direct JSON
+      let j = safeParseJson(text);
+      if (!j) {
+        console.log('Failed to parse JSON from text directly');
+
+        // Try decoding as Base64 first
+        if (isBase64(text)) {
+          console.log('Text appears to be Base64 encoded, attempting to decode...');
+          const decoded = safeDecodeBase64(text);
+          if (decoded) {
+            console.log('Successfully decoded Base64, trying to parse as JSON...');
+            j = safeParseJson(decoded);
+            if (j) {
+              console.log('Successfully parsed JSON from decoded Base64!');
+            } else {
+              console.log('Failed to parse JSON from decoded Base64');
+              console.log('First 200 chars of decoded:', decoded.substring(0, 200));
+            }
+          } else {
+            console.log('Failed to decode Base64');
+          }
+        } else {
+          console.log('Text does not appear to be Base64');
+          console.log('First 200 chars:', text.substring(0, 200));
+        }
+
+        if (!j) continue;
+      }
+
+      console.log('Successfully parsed JSON object, checking card format...');
+      console.log('Object keys:', Object.keys(j));
+      console.log('Is V2 card?', isV2Card(j));
+      console.log('Is V1 card?', isV1Card(j));
+
       if (isV2Card(j) || isV1Card(j)) {
         console.log('Successfully parsed character card');
         return mapToBooth(j, blobUrl);
       }
       if (j && typeof j === 'object') {
-        for (const v of Object.values(j)) {
+        console.log('Checking nested objects for character cards...');
+        for (const [key, v] of Object.entries(j)) {
+          console.log(`Checking key "${key}":`, typeof v, isV2Card(v), isV1Card(v));
           if (isV2Card(v) || isV1Card(v)) {
             console.log('Successfully parsed character card from nested object');
             return mapToBooth(v, blobUrl);
