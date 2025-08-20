@@ -71,6 +71,36 @@
 .ornate-border-pattern-2 {
   @apply absolute top-2 left-2 right-2 bottom-2 border border-amber-300/10;
 }
-#booth-content {
+#tk-booth-content {
   @apply relative z-10 p-6 h-full flex flex-col;
+}
+#tk-booth-header {
+  @apply text-amber-300 text-lg font-serif mb-2;
+}
+.tk-horizontal-booth-divider {
+  @apply h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent;
+}
+#tk-booth-character-spotlight-wrapper {
+  @apply bg-black/30 rounded-lg p-4 mb-4 border border-amber-400/20;
+}
+#tk-booth-character-spotlight-avatar {
+  @apply w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 flex items-center justify-center text-2xl;
+}
+#tk-booth-character-spotlight-name {
+  @apply text-white/90 font-medium;
+}
+#tk-booth-character-spotlight-tagline {
+  @apply text-white/60 text-sm mt-1;
+}
+#tk-booth-character-details-wrapper {
+  @apply flex-1 space-y-4;
+  .tk-booth-character-details-section {
+    @apply bg-black/20 rounded-lg p-3 border border-white/10;
+  }
+  .tk-booth-character-details-section-header {
+    @apply text-amber-300/80 text-xs uppercase tracking-wide mb-1;
+  }
+  .tk-booth-character-details-section-content {
+    @apply text-white/70 text-sm;
+  }
 }

@@ -1,22 +1,18 @@
 <!-- Theater Booth - Character Information Staging Area -->
-<div
-  class="w-full lg:w-80 flex-shrink-0 tk-theater-booth tk-booth-border tk-booth-glow border-t lg:border-t-0 lg:border-l border-amber-400/30 relative overflow-hidden"
->
+<section class="wrapper" aria-label="Section for character information">
   <!-- Velvet curtain effect -->
-  <div
-    class="absolute inset-0 bg-gradient-to-r from-red-800/30 via-purple-800/20 to-red-800/30 opacity-60"
-  ></div>
+  <div class="velvet-curtain" aria-hidden="true"></div>
 
   <!-- Ornate border pattern -->
-  <div class="absolute inset-0 border-2 border-amber-400/20 border-opacity-40"></div>
-  <div class="absolute top-2 left-2 right-2 bottom-2 border border-amber-300/10"></div>
+  <div class="ornate-border-pattern-1" aria-hidden="true"></div>
+  <div class="ornate-border-pattern-2" aria-hidden="true"></div>
 
   <!-- Content -->
-  <div class="relative z-10 p-6 h-full flex flex-col">
+  <div id="tk-booth-content">
     <!-- Booth header -->
     <div class="text-center mb-6">
-      <div class="text-amber-300 text-lg font-serif mb-2">🎭 Private Booth</div>
-      <div class="h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"></div>
+      <div class="tk-booth-header">🎭 Character Booth</div>
+      <div class="tk-horizontal-booth-divider" aria-hidden="true"></div>
     </div>
 
     <!-- Character Import Section -->
@@ -26,34 +22,30 @@
     </div>
 
     <!-- Character spotlight -->
-    <div class="bg-black/30 rounded-lg p-4 mb-4 border border-amber-400/20">
+    <div id="tk-booth-character-spotlight-wrapper">
       <div class="text-center">
-        <div
-          class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 flex items-center justify-center text-2xl"
-        >
-          🎪
-        </div>
-        <div class="text-white/90 font-medium">
+        <div id="tk-booth-character-spotlight-avatar">🎪</div>
+        <div id="tk-booth-character-spotlight-name" aria-label="Character Name">
           {{ currentCharacter() || 'No Character Selected' }}
         </div>
-        <div class="text-white/60 text-sm mt-1">
+        <div id="tk-booth-character-spotlight-tagline" aria-label="Character Tagline">
           {{ characterRole() || 'Awaiting performance...' }}
         </div>
       </div>
     </div>
 
     <!-- Character details -->
-    <div class="flex-1 space-y-4">
-      <div class="bg-black/20 rounded-lg p-3 border border-white/10">
-        <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">Scene Context</div>
-        <div class="text-white/70 text-sm">
+    <div id="tk-booth-character-details-wrapper">
+      <div class="tk-booth-character-details-section">
+        <div class="tk-booth-character-details-section-header">Scene Context</div>
+        <div class="tk-booth-character-details-section-content">
           {{ sceneContext() || 'The stage awaits your direction...' }}
         </div>
       </div>
 
-      <div class="bg-black/20 rounded-lg p-3 border border-white/10">
-        <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">Character Traits</div>
-        <div class="text-white/70 text-sm space-y-1">
+      <div class="tk-booth-character-details-section">
+        <div class="tk-booth-character-details-section-header">Character Traits</div>
+        <div class="tk-booth-character-details-section-content space-y-1">
           @for (trait of characterTraits(); track trait) {
             <div class="flex items-center gap-2">
               <div class="w-1 h-1 rounded-full bg-amber-400/60"></div>
@@ -66,9 +58,9 @@
         </div>
       </div>
 
-      <div class="bg-black/20 rounded-lg p-3 border border-white/10">
-        <div class="text-amber-300/80 text-xs uppercase tracking-wide mb-1">Performance Notes</div>
-        <div class="text-white/70 text-sm">
+      <div class="tk-booth-character-details-section">
+        <div class="tk-booth-character-details-section-header">Performance Notes</div>
+        <div class="tk-booth-character-details-section-content">
           {{ performanceNotes() || 'Ready for improvisation' }}
         </div>
       </div>
@@ -124,4 +116,4 @@
   <div
     class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl"
   ></div>
-</div>
+</section>
