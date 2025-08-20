@@ -17,8 +17,11 @@
 
     <!-- Character Import Section -->
     <div class="mb-4">
-      <tk-upload-character-button (loaded)="booth.setActiveCharacter($event)" class="w-full">
-      </tk-upload-character-button>
+      <tk-theater-booth-upload-character-button
+        (loaded)="booth.setActiveCharacter($event)"
+        class="w-full"
+      >
+      </tk-theater-booth-upload-character-button>
     </div>
 
     <!-- Character spotlight -->
@@ -37,18 +40,14 @@
     <!-- Character details -->
     <div id="tk-booth-character-details-wrapper">
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
-          Scene Context
-        </div>
+        <tk-theater-booth-section-heading> Scene Context </tk-theater-booth-section-heading>
         <div class="tk-booth-character-details-section-content">
           {{ sceneContext() || 'The stage awaits your direction...' }}
         </div>
       </div>
 
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
-          Character Traits
-        </div>
+        <tk-theater-booth-section-heading> Character Traits </tk-theater-booth-section-heading>
         <div class="tk-booth-character-details-section-content space-y-1">
           @for (trait of characterTraits(); track trait) {
             <div class="flex items-center gap-2" role="listitem">
@@ -63,9 +62,7 @@
       </div>
 
       <div class="tk-booth-character-details-section">
-        <div class="tk-booth-character-details-section-header" role="heading" aria-level="2">
-          Performance Notes
-        </div>
+        <tk-theater-booth-section-heading> Performance Notes </tk-theater-booth-section-heading>
         <div class="tk-booth-character-details-section-content">
           {{ performanceNotes() || 'Ready for improvisation' }}
         </div>

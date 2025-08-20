@@ -1,13 +1,19 @@
 import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoothStore } from '../../../booth/booth.store';
-import { UploadCharacterButtonComponent } from './upload-character-button/upload-character-button.component';
+import { TheaterBoothUploadCharacterButtonComponent } from './upload-character-button/theater-booth-upload-character-button.component';
 import { CharacterCardViewComponent } from '../../../booth/character-card-view.component';
+import { TheaterBoothSectionHeadingComponent } from './section-heading/theater-booth-section-heading.component';
 
 @Component({
   standalone: true,
   selector: 'tk-theater-booth',
-  imports: [CommonModule, UploadCharacterButtonComponent, CharacterCardViewComponent],
+  imports: [
+    CommonModule,
+    TheaterBoothUploadCharacterButtonComponent,
+    CharacterCardViewComponent,
+    TheaterBoothSectionHeadingComponent,
+  ],
   templateUrl: './theater-booth.component.html',
   styleUrl: './theater-booth.component.css',
 })

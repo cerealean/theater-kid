@@ -12,12 +12,12 @@ import { CharacterCardImportService } from '../../../../core/services/character-
 import { CharacterBoothModel } from '../../../../shared/models/character-booth.model';
 
 @Component({
-  selector: 'tk-upload-character-button',
+  selector: 'tk-theater-booth-upload-character-button',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './upload-character-button.component.html',
+  templateUrl: './theater-booth-upload-character-button.component.html',
 })
-export class UploadCharacterButtonComponent {
+export class TheaterBoothUploadCharacterButtonComponent {
   private svc = inject(CharacterCardImportService);
   @Output() loaded = new EventEmitter<CharacterBoothModel>();
   @ViewChild('file', { static: true }) fileInput!: ElementRef<HTMLInputElement>;
