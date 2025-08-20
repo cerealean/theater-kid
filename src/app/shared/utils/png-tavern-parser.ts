@@ -100,7 +100,7 @@ function safeParseJson<T = unknown>(s: string): T | null {
     if (obj && typeof obj === 'object') {
       // shallow sanitize
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const o: any = obj;
+      const o = obj as UnsafeObject;
       delete o.__proto__;
       delete o.constructor;
     }
