@@ -165,7 +165,7 @@ export async function parseCharacterFile(file: File): Promise<CharacterBoothMode
     const j = safeParseJson(txt);
     if (!j) throw new Error('Invalid JSON format in character file.');
     if (isV2Card(j) || isV1Card(j)) return mapToBooth(j, blobUrl);
-    throw new Error('Unsupported JSON structure.');
+    throw new Error('File does not contain a valid Tavern character card (V1 or V2 format).');
   }
 
   // PNG path
