@@ -1,7 +1,7 @@
 import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoothStore } from '../../../booth/booth.store';
-import { UploadCharacterButtonComponent } from '../../../booth/upload-character-button.component';
+import { UploadCharacterButtonComponent } from './upload-character-button/upload-character-button.component';
 import { CharacterCardViewComponent } from '../../../booth/character-card-view.component';
 
 @Component({
