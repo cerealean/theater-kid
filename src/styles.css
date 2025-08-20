@@ -8,6 +8,7 @@
   --tk-accent: 199 91% 56%; /* spotlight blue */
   --tk-surface: 260 15% 10%; /* stage */
   --tk-text: 0 0% 98%;
+  --header-height: 4rem; /* 64px, equivalent to mt-16 */
 }
 [data-theme='light'] {
   --tk-surface: 260 10% 98%;
@@ -41,7 +42,7 @@ body {
 
 /* Theater booth styling */
 .tk-theater-booth {
-  background: 
+  background:
     /* Velvet texture simulation */
     repeating-linear-gradient(
       45deg,

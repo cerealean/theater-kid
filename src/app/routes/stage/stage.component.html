@@ -1,4 +1,4 @@
-<div class="h-[calc(100vh-56px)] flex flex-col lg:flex-row">
+<div class="h-[calc(100vh-var(--header-height))] flex flex-col lg:flex-row">
   <!-- Main chat area -->
   <div class="flex-1 flex flex-col">
     <!-- Messages area with fixed height and scroll -->
@@ -190,7 +190,8 @@
   <!-- Mobile Booth Overlay -->
   @if (mobileBoothVisible()) {
     <div
-      class="lg:hidden fixed inset-0 z-[9999] mt-16 bg-black/80 backdrop-blur-sm"
+      class="lg:hidden fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm"
+      style="margin-top: var(--header-height)"
       tabindex="0"
       (click)="toggleMobileBooth()"
       (keydown.escape)="toggleMobileBooth()"
