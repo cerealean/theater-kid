@@ -28,6 +28,7 @@
     "@angular/forms": "^20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@faker-js/faker": "^9.9.0",
     "@floating-ui/dom": "^1.7.3",
     "marked": "^16.2.0",
     "motion": "^12.23.12",

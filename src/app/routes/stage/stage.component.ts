@@ -8,12 +8,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { MarkdownService } from '../../core/markdown/markdown.service';
 import { OpenAIProvider } from '../../core/llm/openai.provider';
 import { OpenRouterProvider } from '../../core/llm/openrouter.provider';
+import { FakeStreamingProvider } from '../../core/llm/fake-streaming.provider';
 import { startOpenRouterPKCE, finishOpenRouterPKCE } from '../../core/llm/openrouter.oauth';
 import { ConfigService } from '../../core/services/config.service';
 import { SpotlightDirective } from '../../shared/spotlight.directive';
 import { StageInputComponent } from './stage-input/stage-input.component';
 import { TheaterBoothComponent } from './theater-booth/theater-booth.component';
 import { EmptyMessagesDisplay } from './empty-messages-display/empty-messages-display';
+
+// Configuration constants for the fake streaming provider
+const FAKE_PROVIDER_CONFIG = {
+  avgDelayMs: 45, // Average milliseconds between streaming chunks for realistic typing speed
+  jitterMs: 35, // Random variance (+/-) in delay timing to simulate human-like irregularity
+  sentences: [1, 3] as [number, number], // Range of sentences to generate per response
+  tokensPerChunk: [1, 5] as [number, number], // Characters per streaming chunk (mimics word-by-word typing)
+  initialThinkingMs: 120, // Initial delay before first chunk to simulate "thinking" time
+};
 
 @Component({
   standalone: true,
@@ -32,7 +42,7 @@ export class StageComponent implements OnInit {
   private config = inject(ConfigService);
   private route = inject(ActivatedRoute);
 
-  provider = signal<'openrouter' | 'openai'>(this.config.provider());
+  provider = signal<'openrouter' | 'openai' | 'fake'>(this.config.provider());
   model = signal<string>(this.config.model());
   system = signal<string>(this.config.system());
   input = signal<string>('');
@@ -73,7 +83,7 @@ export class StageComponent implements OnInit {
   get providerValue() {
     return this.provider();
   }
-  set providerValue(value: 'openrouter' | 'openai') {
+  set providerValue(value: 'openrouter' | 'openai' | 'fake') {
     this.provider.set(value);
   }
 
@@ -82,6 +92,7 @@ export class StageComponent implements OnInit {
   private abort?: AbortController;
   private openai = new OpenAIProvider();
   private openrouter = new OpenRouterProvider();
+  private fake = new FakeStreamingProvider(FAKE_PROVIDER_CONFIG);
 
   constructor() {
     this.finishOAuthIfNeeded();
@@ -315,7 +326,15 @@ export class StageComponent implements OnInit {
     this.input.set('');
     this.busy.set(true);
 
-    const svc = this.provider() === 'openai' ? this.openai : this.openrouter;
+    // Check if we should use fake provider based on debug setting
+    const useFake = this.config.debugFake();
+    let svc;
+    if (useFake) {
+      console.info('[theater-kid] FakeStreamingProvider ACTIVE');
+      svc = this.fake;
+    } else {
+      svc = this.provider() === 'openai' ? this.openai : this.openrouter;
+    }
     const model = this.modelValue;
     this.abort?.abort();
     this.abort = new AbortController();
