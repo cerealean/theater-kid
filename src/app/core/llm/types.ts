@@ -10,7 +10,7 @@ export interface CreateChatParams {
   abortSignal?: AbortSignal;
 }
 export interface ProviderInfo {
-  id: 'openrouter' | 'openai';
+  id: 'openrouter' | 'openai' | 'fake';
   label: string;
   supportsStreaming: boolean;
   needsBYOK: boolean;

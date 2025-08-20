@@ -1,7 +1,7 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { StorageService } from './storage.service';
 
-export type Provider = 'openrouter' | 'openai';
+export type Provider = 'openrouter' | 'openai' | 'fake';
 export type Theme = 'dark' | 'light';
 
 @Injectable({
@@ -16,6 +16,7 @@ export class ConfigService {
     theme: 'tk:theme',
     openrouter: 'tk:openrouter',
     openai: 'tk:openai',
+    debugFake: 'tk:debugFake',
   } as const;
 
   // Default values
@@ -24,6 +25,7 @@ export class ConfigService {
     model: 'openai/gpt-4o-mini',
     system: '',
     theme: 'dark' as Theme,
+    debugFake: false,
   } as const;
 
   readonly storage = inject(StorageService);
@@ -40,6 +42,7 @@ export class ConfigService {
   readonly system = signal<string>(
     this.storage.getItem(this.STORAGE_KEYS.system) ?? this.DEFAULTS.system,
   );
+  readonly debugFake = signal<boolean>(this.getInitialDebugFake());
 
   constructor() {
     effect(() => {
@@ -53,6 +56,9 @@ export class ConfigService {
     });
     effect(() => {
       this.storage.setItem(this.STORAGE_KEYS.system, this.system());
+    });
+    effect(() => {
+      this.storage.setItem(this.STORAGE_KEYS.debugFake, String(this.debugFake()));
     });
   }
 
@@ -70,5 +76,21 @@ export class ConfigService {
 
   setOpenAIKey(key: string): void {
     localStorage.setItem(this.STORAGE_KEYS.openai, key);
+  }
+
+  private getInitialDebugFake(): boolean {
+    // Check query param first
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debugFake') === '1') {
+      return true;
+    }
+
+    // Fall back to localStorage
+    const stored = this.storage.getItem(this.STORAGE_KEYS.debugFake);
+    return stored === 'true';
+  }
+
+  setDebugFake(enabled: boolean): void {
+    this.debugFake.set(enabled);
   }
 }
