@@ -21,9 +21,28 @@ import { CharacterBoothModel } from '../shared/models/character-booth.model';
       (click)="fileInput.nativeElement.click()"
       [attr.aria-busy]="busy()"
       [disabled]="busy()"
-      class="btn"
+      class="tk-btn group relative overflow-hidden"
+      [attr.title]="busy() ? 'Parsing character file...' : 'Upload Character PNG/JSON'"
     >
-      {{ busy() ? 'Parsing…' : 'Upload Character PNG/JSON' }}
+      <div class="flex items-center gap-2">
+        <!-- Upload SVG Icon -->
+        <svg
+          class="w-5 h-5 transition-transform group-hover:scale-110"
+          [class.animate-pulse]="busy()"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+          ></path>
+        </svg>
+        <span class="text-sm">{{ busy() ? 'Parsing…' : 'Upload' }}</span>
+      </div>
     </button>
     <input
       #file
@@ -53,7 +72,10 @@ export class UploadCharacterButtonComponent {
       const character = await this.svc.import(file);
       this.loaded.emit(character);
     } catch (e) {
-      this.error.set((e as Error)?.message ?? 'Unable to parse character file. Please check the file format and try again.');
+      this.error.set(
+        (e as Error)?.message ??
+          'Unable to parse character file. Please check the file format and try again.',
+      );
     } finally {
       this.busy.set(false);
       input.value = '';
