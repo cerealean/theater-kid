@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { CharacterBoothModel } from '../../shared/models/character-booth.model';
+import { type CharacterBoothModel } from '../../shared/models/character-booth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,8 +32,10 @@ export class CharacterService {
   ): void {
     if (typeof nameOrCharacter === 'string') {
       this.characters.set(nameOrCharacter, character!);
+      this.setCurrentCharacterIfFirstCharacter(nameOrCharacter);
     } else {
       this.characters.set(nameOrCharacter.name, nameOrCharacter);
+      this.setCurrentCharacterIfFirstCharacter(nameOrCharacter.name);
     }
   }
 
@@ -41,9 +43,22 @@ export class CharacterService {
   removeCharacter(character: CharacterBoothModel): void;
   removeCharacter(character: string | CharacterBoothModel): void {
     if (typeof character === 'string') {
-      this.characters.delete(character);
+      this.removeCharacterAndUnsetIfCurrentCharacter(character);
     } else {
-      this.characters.delete(character.name);
+      this.removeCharacterAndUnsetIfCurrentCharacter(character.name);
+    }
+  }
+
+  private setCurrentCharacterIfFirstCharacter(character: string): void {
+    if (this.characters.size === 1) {
+      this._currentCharacter.set(character);
+    }
+  }
+
+  private removeCharacterAndUnsetIfCurrentCharacter(name: string): void {
+    this.characters.delete(name);
+    if (this._currentCharacter() === name) {
+      this._currentCharacter.set('');
     }
   }
 }
