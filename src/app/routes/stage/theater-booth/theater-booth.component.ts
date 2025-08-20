@@ -9,6 +9,7 @@ import { CharacterCardViewComponent } from '../../../booth/character-card-view.c
   selector: 'tk-theater-booth',
   imports: [CommonModule, UploadCharacterButtonComponent, CharacterCardViewComponent],
   templateUrl: './theater-booth.component.html',
+  styleUrl: './theater-booth.component.css',
 })
 export class TheaterBoothComponent {
   public booth = inject(BoothStore);
