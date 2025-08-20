@@ -19,7 +19,9 @@ async function inflateDeflate(data: Uint8Array): Promise<Uint8Array> {
     const stream = new Response(new Blob([data]).stream().pipeThrough(ds));
     return new Uint8Array(await stream.arrayBuffer());
   }
-  throw new Error('Deflate decompression not supported by this browser.');
+  throw new Error(
+    'Deflate decompression not supported by this browser. Please see https://caniuse.com/mdn-api_decompressionstream_decompressionstream_deflate for browser support.',
+  );
 }
 
 interface TextEntry {
